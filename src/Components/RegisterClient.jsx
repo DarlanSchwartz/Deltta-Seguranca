@@ -20,13 +20,21 @@ export default function RegisterClient() {
 
 
     useEffect(() => {
-        if (nome != '' && rua != '' && contato != '' && valorCombinado !='' && valorCombinado != 0 && valorCombinado != '0' && numero != 0 && bairro != '0' && cidade != '0') {
+        if (
+        nome != '' &&
+         rua != '' && 
+         contato != '' && 
+         valorCombinado !='' && valorCombinado != 0 && valorCombinado != '0' && 
+         numero != 0  && numero != '' && 
+         bairro != '' && 
+         cidade != '')
+        {
             setPodeCadastrar(true);
         }
         else {
             setPodeCadastrar(false);
         }
-    }, [nome, rua, contato,valorCombinado]);
+    }, [nome, rua, contato,valorCombinado,numero,bairro,cidade]);
 
     function cadastrarCliente() {
         if (!podeCadastrar) {
@@ -79,7 +87,7 @@ export default function RegisterClient() {
         setObservacao('');
         setPodeCadastrar(false);
         setValorCombinado(0);
-        formadepagamento.current.value = '';
+        formadepagamento.current.value = 'Dinheiro/Pix';
     }
 
     return (
@@ -135,7 +143,7 @@ const StyledForm = styled.form`
   align-items: center;
   flex-direction: column;
   gap: 10px;
-  margin-top: 40px;
+  margin-top: 100px;
   flex-shrink: 0;
   background-color: rgba(255, 255, 255, 0.726);
 

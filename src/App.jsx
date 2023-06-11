@@ -29,7 +29,7 @@ export default  function App() {
       <PageContainer>
       <RegisterClient/>
         <h1 className='title'>Cadastrar cliente</h1>
-        {usuarios.length > 0 && 
+        {/* {usuarios.length > 0 && 
         
         <ClientsContainer>
           {usuarios.map((user) =>{
@@ -37,7 +37,7 @@ export default  function App() {
                 <Client user={user} key={user.id}/>
             );
           })}
-        </ClientsContainer>}
+        </ClientsContainer>} */}
       </PageContainer>
     </ClientsContext.Provider>
   )

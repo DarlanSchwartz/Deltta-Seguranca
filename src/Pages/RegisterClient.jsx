@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
-import { formatarTelefone } from "../utils";
+import { formatarTelefone ,formatValorCombinado } from "../utils";
 
 export default function RegisterClient() {
     const [nome, setNome] = useState('');
@@ -85,15 +85,7 @@ export default function RegisterClient() {
         limparCampos();
     }
 
-    function formatValorCombinado()
-    {
-        if(valorCombinado == '')
-        {
-            return valorCombinado;
-        }
-
-        return 'R$ ' + valorCombinado;
-    }
+   
 
     function limparCampos()
     {
@@ -111,6 +103,7 @@ export default function RegisterClient() {
     }
 
     return (
+        <PageContainer>
         <StyledForm onSubmit={(e) => { e.preventDefault(); cadastrarCliente(); }}>
             <label  htmlFor="nome">Nome</label>
             <input  required value={nome} onChange={(e) => setNome(e.target.value)} id='nome' name='nome' type='text' placeholder='Ex: João da Silva Sauro' />
@@ -139,7 +132,7 @@ export default function RegisterClient() {
                 <label htmlFor='forma-de-pagamento'>Forma</label>
             </div>
             <div className="values">
-                <input required className="combined-value" value={formatValorCombinado()} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, ''))} type="text" name='valor' id='valor' placeholder='R$ 100,00' />
+                <input required className="combined-value" value={formatValorCombinado(valorCombinado)} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, ''))} type="text" name='valor' id='valor' placeholder='R$ 100,00' />
                 <select className="payment-style" ref={formadepagamento} name="forma-de-pagamento" id="forma-de-pagamento">
                     <option>Dinheiro/Pix</option>
                     <option>Boleto</option>
@@ -150,6 +143,7 @@ export default function RegisterClient() {
             {podeCadastrar ? <button type='submit'>Cadastrar cliente</button> : <button disabled type='submit'>Cadastrar cliente</button>}
             
         </StyledForm>
+        </PageContainer>
     );
 }
 
@@ -325,4 +319,13 @@ const StyledForm = styled.form`
 }
 
 
+`;
+
+const PageContainer = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100%;
+height: 100%;
+flex-direction: column;
 `;

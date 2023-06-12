@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import print from 'ink-html';
-import './test.css';
 
 export default function Client({ user: { nome, endereco, contato, formadepagamento } }) {
     return (

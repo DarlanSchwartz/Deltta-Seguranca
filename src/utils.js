@@ -20,3 +20,13 @@ export function formatarTelefone(value) {
 
     return numeroFormatado;
 }
+
+export function formatValorCombinado(valorCombinado)
+{
+    if(valorCombinado == '')
+    {
+        return valorCombinado;
+    }
+
+    return 'R$ ' + valorCombinado;
+}

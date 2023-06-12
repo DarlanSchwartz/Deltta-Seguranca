@@ -12,19 +12,29 @@ export default function RegisterClient() {
     const [contato, setContato] = useState('');
     const [contato2, setContato2] = useState('');
     const [observacao, setObservacao] = useState('');
-    const [valorCombinado, setValorCombinado] = useState(0);
+    const [valorCombinado, setValorCombinado] = useState('');
+    // const test = useRef();
+    // input need ref={test}
+    // useEffect(()=>{
+    //     if(test)
+    //     {
+    //       test.current.setCustomValidity('Paaaaaaaaaaaaaaaae campo.');
+    //     }
+    //  },[])
+
 
     const formadepagamento = useRef(null);
     const [podeCadastrar, setPodeCadastrar] = useState(false);
     const { usuarios, setUsuarios } = useContext(ClientsContext);
 
+    
 
     useEffect(() => {
         if (
         nome != '' &&
          rua != '' && 
          contato != '' && 
-         valorCombinado !='' && valorCombinado != 0 && valorCombinado != '0' && 
+         valorCombinado !='' && valorCombinado != 'R$ 0' && valorCombinado != 'R$ ' && valorCombinado != ' ' && 
          numero != 0  && numero != '' && 
          bairro != '' && 
          cidade != '')
@@ -75,6 +85,16 @@ export default function RegisterClient() {
         limparCampos();
     }
 
+    function formatValorCombinado()
+    {
+        if(valorCombinado == '')
+        {
+            return valorCombinado;
+        }
+
+        return 'R$ ' + valorCombinado;
+    }
+
     function limparCampos()
     {
         setNome('');
@@ -92,8 +112,8 @@ export default function RegisterClient() {
 
     return (
         <StyledForm onSubmit={(e) => { e.preventDefault(); cadastrarCliente(); }}>
-            <label htmlFor="nome">Nome</label>
-            <input required value={nome} onChange={(e) => setNome(e.target.value)} id='nome' name='nome' type='text' placeholder='Ex: João da Silva Sauro' />
+            <label  htmlFor="nome">Nome</label>
+            <input  required value={nome} onChange={(e) => setNome(e.target.value)} id='nome' name='nome' type='text' placeholder='Ex: João da Silva Sauro' />
             <label htmlFor="rua">Rua</label>
             <input required value={rua} onChange={(e) => setRua(e.target.value)} type="text" id='rua' name='rua' placeholder='Ex: Avenida das dores' />
             <div className="adress-labels-elements-container">
@@ -119,7 +139,7 @@ export default function RegisterClient() {
                 <label htmlFor='forma-de-pagamento'>Forma</label>
             </div>
             <div className="values">
-                <input required className="combined-value" value={valorCombinado} onChange={(e) => setValorCombinado(e.target.value)} type="number" name='valor' id='valor' placeholder='R$ 100,00' />
+                <input required className="combined-value" value={formatValorCombinado()} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, ''))} type="text" name='valor' id='valor' placeholder='R$ 100,00' />
                 <select className="payment-style" ref={formadepagamento} name="forma-de-pagamento" id="forma-de-pagamento">
                     <option>Dinheiro/Pix</option>
                     <option>Boleto</option>
@@ -233,7 +253,7 @@ const StyledForm = styled.form`
 }
 
   .contato{
-    width: 47.5%;
+    width: 47%;
 }
 
 .payment-labels-container{

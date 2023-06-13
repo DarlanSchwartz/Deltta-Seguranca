@@ -2,6 +2,9 @@ import { useContext, useState, useEffect, useRef } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { formatarTelefone ,formatValorCombinado } from "../utils";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function RegisterClient() {
     const [nome, setNome] = useState('');
@@ -13,38 +16,72 @@ export default function RegisterClient() {
     const [contato2, setContato2] = useState('');
     const [observacao, setObservacao] = useState('');
     const [valorCombinado, setValorCombinado] = useState('');
-    // const test = useRef();
-    // input need ref={test}
-    // useEffect(()=>{
-    //     if(test)
-    //     {
-    //       test.current.setCustomValidity('Paaaaaaaaaaaaaaaae campo.');
-    //     }
-    //  },[])
-
-
+    const [vencimento, setVencimento] = useState('');
+    const [editingClientId,setEditingClientId] = useState(null);
     const formadepagamento = useRef(null);
     const [podeCadastrar, setPodeCadastrar] = useState(false);
-    const { usuarios, setUsuarios } = useContext(ClientsContext);
+    const { usuarios, setUsuarios ,editingClient,setEditingClient} = useContext(ClientsContext);
+    const navigate = useNavigate();
 
-    
+
+    useEffect( ()=> {
+        if(editingClient)
+        {
+            setNome(editingClient.nome);
+            setRua(editingClient.rua);
+            setBairro(editingClient.bairro);
+            setNumero(editingClient.numero);
+            setCidade(editingClient.cidade);
+            setContato(editingClient.contato);
+            setContato2(editingClient.contato2);
+            setObservacao(editingClient.observacao);
+            setPodeCadastrar(true);
+            setValorCombinado(editingClient.valorCombinado);
+            formadepagamento.current.value = editingClient.formadepagamento;
+            setEditingClientId(editingClient.id);
+            setVencimento(editingClient.vencimento);
+        }
+    },[]);
+
+    function notify (type) {
+        if(type == 'edit')
+        {
+            toast.info( 'Editado com sucesso!', {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                });
+        }
+        else
+        {
+            toast.success( 'Cliente cadastrado com sucesso!', {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                });
+        }
+       
+    }
 
     useEffect(() => {
-        if (
-        nome != '' &&
-         rua != '' && 
-         contato != '' && 
-         valorCombinado !='' && valorCombinado != 'R$ 0' && valorCombinado != 'R$ ' && valorCombinado != ' ' && 
-         numero != 0  && numero != '' && 
-         bairro != '' && 
-         cidade != '')
+        if (nome != '' && vencimento !='' && vencimento !=0 && valorCombinado !=0)
         {
             setPodeCadastrar(true);
         }
         else {
             setPodeCadastrar(false);
         }
-    }, [nome, rua, contato,valorCombinado,numero,bairro,cidade]);
+    }, [nome,vencimento,valorCombinado]);
 
     function cadastrarCliente() {
         if (!podeCadastrar) {
@@ -52,37 +89,68 @@ export default function RegisterClient() {
             return;
         }
 
-        let clientIds = [];
         let id = 0;
 
-        if (usuarios.length > 0) {
-            usuarios.forEach(user => {
-                clientIds.push(user.id);
-            });
+       if(editingClient == null)
+       {
+            let clientIds = [];
+            
 
-            do {
-                id = Math.floor(Math.random() * 1001);
-            } while (clientIds.includes(id));
-        }
+            if (usuarios.length > 0) {
+                usuarios.forEach(user => {
+                    clientIds.push(user.id);
+                });
 
-        const newObj = {
-            id: id,
-            nome: nome,
-            rua: rua,
-            numero: numero,
-            bairro: bairro,
-            cidade: cidade,
-            contato: contato.toString(),
-            contato2: contato2.toString(),
-            formadepagamento: formadepagamento.current.value,
-            valorCombinado:valorCombinado,
-            observacao: observacao
-        };
+                do {
+                    id = Math.floor(Math.random() * 1001);
+                } while (clientIds.includes(id));
+            }
 
-        console.log(newObj);
+            const newObj = {
+                id: id,
+                nome: nome,
+                rua: rua,
+                numero: numero,
+                bairro: bairro,
+                cidade: cidade,
+                contato: contato.toString(),
+                contato2: contato2.toString(),
+                formadepagamento: formadepagamento.current.value,
+                valorCombinado:valorCombinado,
+                observacao: observacao,
+                vencimento:vencimento
+            };
+    
+            //console.log(newObj);
+            notify('register');
+            setUsuarios([...usuarios, newObj]);
+            limparCampos();
+       }
+       else
+       {    
+            const newObj = {
+                id: editingClientId,
+                nome: nome,
+                rua: rua,
+                numero: numero,
+                bairro: bairro,
+                cidade: cidade,
+                contato: contato.toString(),
+                contato2: contato2.toString(),
+                formadepagamento: formadepagamento.current.value,
+                valorCombinado:valorCombinado,
+                observacao: observacao,
+                vencimento: vencimento
+            };
 
-        setUsuarios([...usuarios, newObj]);
-        limparCampos();
+            notify('edit');
+            const filteredUsers = usuarios.filter(user => user.id != editingClientId);
+            filteredUsers.push(newObj);
+            setUsuarios([...filteredUsers]);
+            setEditingClient(null);
+            limparCampos();
+            navigate('/clients');
+       }
     }
 
    
@@ -98,41 +166,46 @@ export default function RegisterClient() {
         setContato2('');
         setObservacao('');
         setPodeCadastrar(false);
-        setValorCombinado(0);
+        setValorCombinado('');
+        setVencimento('');
+        setEditingClientId(null);
         formadepagamento.current.value = 'Dinheiro/Pix';
     }
 
     return (
         <PageContainer>
+        
         <StyledForm onSubmit={(e) => { e.preventDefault(); cadastrarCliente(); }}>
             <label  htmlFor="nome">Nome</label>
-            <input  required value={nome} onChange={(e) => setNome(e.target.value)} id='nome' name='nome' type='text' placeholder='Ex: João da Silva Sauro' />
+            <input  value={nome} onChange={(e) => setNome(e.target.value)} id='nome' name='nome' type='text' placeholder='Ex: João da Silva Sauro' />
             <label htmlFor="rua">Rua</label>
-            <input required value={rua} onChange={(e) => setRua(e.target.value)} type="text" id='rua' name='rua' placeholder='Ex: Avenida das dores' />
+            <input value={rua} onChange={(e) => setRua(e.target.value)} type="text" id='rua' name='rua' placeholder='Ex: Avenida das dores' />
             <div className="adress-labels-elements-container">
                 <label htmlFor="cidade">Cidade</label>
                 <label htmlFor="bairro">Bairro</label>
                 <label htmlFor="numero">Numero</label>
             </div>
             <div className="adress-elements-container">
-                <input required value={cidade} onChange={(e) => setCidade(e.target.value)} type="text" id='cidade' name='cidade' placeholder='Ex: Estância Velha' />
-                <input required value={bairro} onChange={(e) => setBairro(e.target.value)} type="text" id='bairro' name='bairro' placeholder='Ex: Bairro das Rosas' />
-                <input required value={numero} onChange={(e) => setNumero(e.target.value)} type="number" id='numero' name='numero' placeholder='Ex: 1032' />
+                <input value={cidade} onChange={(e) => setCidade(e.target.value)} type="text" id='cidade' name='cidade' placeholder='Ex: Estância Velha' />
+                <input value={bairro} onChange={(e) => setBairro(e.target.value)} type="text" id='bairro' name='bairro' placeholder='Ex: Bairro das Rosas' />
+                <input value={numero} onChange={(e) => setNumero(e.target.value)} type="number" id='numero' name='numero' placeholder='Ex: 1032' />
             </div>
             <div className="label-contatos-container">
                 <label htmlFor="contato1">Contato 1</label>
                 <label htmlFor="contato2">Contato 2</label>
             </div>
             <div className="contatos">
-                <input required className="contato" value={contato} onChange={(e) => setContato(formatarTelefone(e.target.value))} type="text" name='contato1' id='contato1' placeholder='(51) 99999-9999' pattern='\(\d{2}\) \d{5}-\d{4}' maxLength={15} />
+                <input className="contato" value={contato} onChange={(e) => setContato(formatarTelefone(e.target.value))} type="text" name='contato1' id='contato1' placeholder='(51) 99999-9999' pattern='\(\d{2}\) \d{5}-\d{4}' maxLength={15} />
                 <input className="contato" value={contato2} onChange={(e) => setContato2(formatarTelefone(e.target.value))} type="text" name='contato2' id='contato2' placeholder='(51) 99999-9999' pattern='\(\d{2}\) \d{5}-\d{4}' maxLength={15} />
             </div>
             <div className="payment-labels-container">
                 <label htmlFor="valor">Valor</label>
+                <label htmlFor="vencimento">Vencimento</label>
                 <label htmlFor='forma-de-pagamento'>Forma</label>
             </div>
             <div className="values">
                 <input required className="combined-value" value={formatValorCombinado(valorCombinado)} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, ''))} type="text" name='valor' id='valor' placeholder='R$ 100,00' />
+                <input required className="payment-day" value={vencimento} onChange={(e) => setVencimento(e.target.value.toString().slice(0, 2))} type="number" name='vencimento' id='vencimento' placeholder='Dia do mês'/>
                 <select className="payment-style" ref={formadepagamento} name="forma-de-pagamento" id="forma-de-pagamento">
                     <option>Dinheiro/Pix</option>
                     <option>Boleto</option>
@@ -140,7 +213,7 @@ export default function RegisterClient() {
             </div>
             <label htmlFor='observacao'>Observação</label>
             <textarea rows={5} className='obs' value={observacao} onChange={(e) => setObservacao(e.target.value)} type="text" name='observacao' id='observacao' placeholder='Ex: O cliente quer que deixe a chave embaixo do tapede do cachorro verde' />
-            {podeCadastrar ? <button type='submit'>Cadastrar cliente</button> : <button disabled type='submit'>Cadastrar cliente</button>}
+            {podeCadastrar ? <button type='submit'>{editingClient ? 'Confirmar alterações' : 'Cadastrar cliente'}</button> : <button disabled type='submit'>{editingClient ? 'Confirmar alterações' : 'Cadastrar cliente'}</button>}
             
         </StyledForm>
         </PageContainer>
@@ -212,7 +285,7 @@ const StyledForm = styled.form`
     padding-left: 10px;
     padding-top: 5px;
     &:focus{
-      outline: 2px solid green;
+      outline: 2px solid #07bc0c;
     }
   }
 
@@ -223,7 +296,7 @@ const StyledForm = styled.form`
     width: 95%;
     padding-left: 10px;
     &:focus{
-      outline: 2px solid green;
+      outline: 2px solid #07bc0c;
     }
   }
 
@@ -253,7 +326,16 @@ const StyledForm = styled.form`
 .payment-labels-container{
     display: flex;
     width: 100%;
-    gap: 230px;
+    label{
+        &:nth-child(2)
+        {
+            margin-left: 150px;
+        }
+        &:nth-child(3)
+        {
+            margin-left: 107px;
+        }
+    }
 }
 
 .values{
@@ -264,16 +346,20 @@ const StyledForm = styled.form`
     gap: 1%;
 
     .combined-value{
-        width: 47%;
+        width: 31%;
+    }
+    .payment-day{
+        width: 31%;
     }
     label{
         align-self: auto;
     }
+    .payment-style{
+        width: 31%;
+    }
 }
 
-.payment-style{
-    width: 47%;
-}
+
 
   select{
     border: 1px solid rgba(143, 143, 143, 0.288);
@@ -284,7 +370,7 @@ const StyledForm = styled.form`
     cursor: pointer;
     &:focus
     {
-        outline: 2px solid green;
+        outline: 2px solid #07bc0c;
     }
   }
 
@@ -294,7 +380,7 @@ const StyledForm = styled.form`
 
   button{
     border: 0;
-    background-color: green;
+    background-color: #07bc0c;
     color: white;
     cursor: pointer;
     height: 40px;
@@ -305,8 +391,8 @@ const StyledForm = styled.form`
    
     &:hover{
       &:enabled{
-        color: green;
-      border: 1px solid green;
+        color: #07bc0c;
+      border: 1px solid #07bc0c;
       background-color: white;
       }
     }

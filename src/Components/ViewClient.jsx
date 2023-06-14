@@ -48,23 +48,24 @@ export default function ViewClient()
     return (
        <>
        {viewingClient &&  
-            <Modal onClick={()=> setViewingClient(null)}>
-                <ViewClientDiv onClick={(e) => e.stopPropagation()}>
-                    <p><strong>Nome: </strong> {viewingClient.nome}</p>
-                    <p><strong>Endereço: </strong> {viewingClient.rua + ' ' + viewingClient.numero + ' - ' + viewingClient.bairro + ' - ' + viewingClient.cidade }</p>
-                    <p><strong>Contato 1: </strong> {viewingClient.contato != '' ? viewingClient.contato : '(--) ---- ----'}</p>
-                    {viewingClient.contato2 != '' && <p><strong>Contato 2: </strong> {viewingClient.contato2}</p>}
-                    <p><strong>Forma de pagamento: </strong> {viewingClient.formadepagamento }</p>
-                    <p><strong>Vencimento dia: </strong> {viewingClient.vencimento}</p>
-                    <p><strong>Valor combinado: </strong> <em> R$ {viewingClient.valorCombinado}</em></p>
-                    <p className="obs"><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
-                    <button><BsFillPrinterFill/>Imprimir Recibo</button>
-                    <div className="actions">
-                        <FaEdit onClick={edit} className="edit-btn"/>
-                        <RiDeleteBin6Fill onClick={deleteThis} className="delete-btn"/>
-                    </div>
-                </ViewClientDiv>
-            </Modal>
+            <>
+            <Modal onClick={()=> setViewingClient(null)}></Modal>
+            <ViewClientDiv onClick={(e) => e.stopPropagation()}>
+                <p><strong>Nome: </strong> {viewingClient.nome}</p>
+                <p><strong>Endereço: </strong> {viewingClient.rua + ' ' + viewingClient.numero + ' - ' + viewingClient.bairro + ' - ' + viewingClient.cidade }</p>
+                <p><strong>Contato 1: </strong> {viewingClient.contato != '' ? viewingClient.contato : '(--) ---- ----'}</p>
+                {viewingClient.contato2 != '' && <p><strong>Contato 2: </strong> {viewingClient.contato2}</p>}
+                <p><strong>Forma de pagamento: </strong> {viewingClient.formadepagamento }</p>
+                <p><strong>Vencimento dia: </strong> {viewingClient.vencimento}</p>
+                <p><strong>Valor combinado: </strong> <em> R$ {viewingClient.valorCombinado}</em></p>
+                <p className="obs"><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
+                <button><BsFillPrinterFill/>Imprimir Recibo</button>
+                <div className="actions">
+                    <FaEdit onClick={edit} className="edit-btn"/>
+                    <RiDeleteBin6Fill onClick={deleteThis} className="delete-btn"/>
+                </div>
+            </ViewClientDiv>
+            </>
         }
        </>
     );
@@ -145,10 +146,10 @@ const ViewClientDiv = styled.div`
 
 const Modal = styled.div`
 
-width: 100%;
-height: 100%;
-background-color: rgba(0,0,0,0.7);
-position: fixed;
-left: 0;
-top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    position: fixed;
+    left: 0;
+    top: 0;
 `;

@@ -39,7 +39,7 @@ export default function Navbar()
     );
 }
 
-const Header = styled.div`
+const Header = styled.header`
 
   position: fixed;
   top: 0px;
@@ -54,6 +54,7 @@ const Header = styled.div`
   justify-content: space-between;
   padding-left: 30px;
   padding-right: 30px;
+  z-index: 2;
 
   h1{
     font-size: 40px;

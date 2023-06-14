@@ -267,7 +267,7 @@ const ClientsContainer = styled.div`
   gap: 5px;
   width: 100%;
   margin-top: 130px;
-  margin-bottom: 1330px;
+
   justify-content: center;
   align-items: center;
 `;

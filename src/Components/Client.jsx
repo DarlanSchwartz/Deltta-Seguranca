@@ -102,6 +102,11 @@ const ClientDiv = styled.div`
     box-sizing: content-box;
     border: 2px solid rgba(0,0,0,0);
     cursor: pointer;
+
+    &:last-child
+    {
+      margin-bottom: 40px;
+    }
     
 
     &:hover{

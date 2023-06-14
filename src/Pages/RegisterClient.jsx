@@ -203,7 +203,7 @@ export default function RegisterClient() {
                 <label htmlFor='forma-de-pagamento'>Forma</label>
             </div>
             <div className="values">
-                <input required className="combined-value" value={formatValorCombinado(valorCombinado)} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, ''))} type="text" name='valor' id='valor' placeholder='R$ 100,00' />
+                <input required className="combined-value" value={formatValorCombinado(valorCombinado)} onChange={(e) => setValorCombinado(e.target.value.replace(/[^0-9,]/g, '').replace(',',''))} type="text" name='valor' id='valor' placeholder='R$ 100' />
                 <input required className="payment-day" value={vencimento} onChange={(e) => setVencimento(e.target.value.toString().slice(0, 2))} type="number" name='vencimento' id='vencimento' placeholder='Dia do mês'/>
                 <select className="payment-style" ref={formadepagamento} name="forma-de-pagamento" id="forma-de-pagamento">
                     <option>Dinheiro/Pix</option>

@@ -146,11 +146,11 @@ export default function App() {
   const [clientSearchValue,setClientSearchValue] = useState('');
 
   // Selecionar varios para deletar ou imprimir recibo
-  // Filtrar por : Valor pago, Dia do pagamento, nome do cliente, endereço
-  // Tela para recibos
-  // Imprimir varios recibos
   // Imprimir recibos de um dia especifico
-  // Marcar todos os clientes que pagam em um dia especifico
+  // Possibilidade de gerar a lista de clientes com -> Vencimento , ID ,  Nome , Endereço , Valor
+  //                                               Vencimento      ID            Nome                             Endereço   
+  //                                                   10          10      Valdemar da costa    Rua Santiago 467 - Bela Vista - Novo Hamburgo
+  // Atualizar valor total e médio ao excluir cliente
 
   return (
     <BrowserRouter>

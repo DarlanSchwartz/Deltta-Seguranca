@@ -158,7 +158,7 @@ export default function Clients() {
         {usuarios.length > 0 && usuarios.map((user) => {
           let hide = false;
 
-          if (user.nome.toLowerCase().includes(clientSearchValue.toLowerCase())) {
+          if (user.nome.toLowerCase().includes(clientSearchValue.toLowerCase()) || user.id.toString() == clientSearchValue.toString()) {
             hide = true;
           }
 

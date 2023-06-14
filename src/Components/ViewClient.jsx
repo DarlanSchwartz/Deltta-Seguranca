@@ -51,6 +51,7 @@ export default function ViewClient()
             <>
             <Modal onClick={()=> setViewingClient(null)}></Modal>
             <ViewClientDiv onClick={(e) => e.stopPropagation()}>
+                <p><strong>ID: </strong> {viewingClient.id}</p>
                 <p><strong>Nome: </strong> {viewingClient.nome}</p>
                 <p><strong>Endereço: </strong> {viewingClient.rua + ' ' + viewingClient.numero + ' - ' + viewingClient.bairro + ' - ' + viewingClient.cidade }</p>
                 <p><strong>Contato 1: </strong> {viewingClient.contato != '' ? viewingClient.contato : '(--) ---- ----'}</p>

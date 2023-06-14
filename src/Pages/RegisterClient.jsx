@@ -23,7 +23,6 @@ export default function RegisterClient() {
     const { usuarios, setUsuarios ,editingClient,setEditingClient} = useContext(ClientsContext);
     const navigate = useNavigate();
 
-
     useEffect( ()=> {
         if(editingClient)
         {
@@ -116,7 +115,7 @@ export default function RegisterClient() {
                 contato: contato.toString(),
                 contato2: contato2.toString(),
                 formadepagamento: formadepagamento.current.value,
-                valorCombinado:valorCombinado,
+                valorCombinado:Number(valorCombinado),
                 observacao: observacao,
                 vencimento:vencimento
             };

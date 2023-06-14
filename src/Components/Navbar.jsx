@@ -10,7 +10,7 @@ export default function Navbar()
 {
     const navigate = useNavigate();
     const location = useLocation();
-    const {editingClient, setEditingClient} = useContext(ClientsContext);
+    const {editingClient, setEditingClient,usuarios,setUsuarios} = useContext(ClientsContext);
     const [showSearchIcon, setShowSeachIcon] = useState(true);
     const [searchValue, setSearchValue] = useState('');
 
@@ -22,13 +22,14 @@ export default function Navbar()
 
     return (
         <Header>
-            {location.pathname == '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+            {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+            {location.pathname !== '/' && 
             <SearchBar>
                 <div className="input-container">
                     <input value={searchValue} onChange={(e)=> updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={()=> setShowSeachIcon(false)} onBlur={()=> setShowSeachIcon(true)} />
                     <MdPersonSearch className={`search-icon ${!showSearchIcon ? 'hide' : ''}`}/>
                 </div>
-            </SearchBar>
+            </SearchBar>}
             <Actions>
                 <button onClick={()=> {navigate('/clients'); setEditingClient(null); }}><MdGroups2 className="icon-group"/>Clientes</button>
                 <button onClick={()=> navigate('/')}><BsPersonFillAdd className="icon-add"/> Cadastrar cliente</button>

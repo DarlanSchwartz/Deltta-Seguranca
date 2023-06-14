@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ClientsContext from '../Contexts/ClientsContext';
 import { useNavigate } from 'react-router-dom';
@@ -6,12 +6,21 @@ import Swal from 'sweetalert2';
 import trashIcon from '/trash.png';
 import {FaEdit} from 'react-icons/fa';
 import {RiDeleteBin6Fill} from 'react-icons/ri';
+import { toast } from 'react-toastify';
 
 
-export default function Client({ user }) {
+export default function Client(props) {
   const {setEditingClient,usuarios,setUsuarios,setViewingClient} = useContext(ClientsContext); 
+
+  const {user,checked} = props;
   const  { nome, rua, contato , numero,bairro,cidade} = user;
+  const isChecked = useRef(null);
   const navigate = useNavigate();
+
+
+  useEffect(()=>{
+    isChecked.current.checked = checked;
+  },[checked])
 
   function edit(e)
   {
@@ -37,6 +46,16 @@ export default function Client({ user }) {
       imageHeight: 100,
     }).then((result) => {
       if (result.isConfirmed) {
+        toast.error(`${user.nome} foi removido da lista`, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          });
         setUsuarios(usuarios.filter(fuser => fuser.id != user.id));
       }
     });
@@ -56,7 +75,9 @@ export default function Client({ user }) {
             <div className='actions'>
               <FaEdit onClick={edit} className='edit-icon'/>
               <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon'/>
-              <input type="checkbox" onClick={(e) => e.stopPropagation()} />
+              <div className='checkbox' onClick={(e) => e.stopPropagation()}>
+                <input ref={isChecked} type="checkbox" onClick={(e) => e.stopPropagation()}/>
+              </div>
             </div>
         </ClientDiv>
     );
@@ -69,7 +90,7 @@ const ClientDiv = styled.div`
     border-radius: 5px;
     color: #5e5e5e;
     width: 100%;
-    max-width: 900px;
+    max-width: 1100px;
     display: flex;
     gap: 30px;
     height: 40px;
@@ -80,9 +101,21 @@ const ClientDiv = styled.div`
     box-sizing: content-box;
     border: 2px solid rgba(0,0,0,0);
     cursor: pointer;
+    
 
     &:hover{
       border: 2px solid black;
+    }
+
+
+    p:nth-child(1)
+    {
+      width: 300px;
+    }
+
+    p:nth-child(2)
+    {
+      width: 500px;
     }
     
 
@@ -91,6 +124,7 @@ const ClientDiv = styled.div`
       align-items: center;
       gap: 10px;
       max-width: 84px;
+      position: relative;
 
       .edit-icon,.delete-icon{
         color: #07bc0c;
@@ -107,11 +141,25 @@ const ClientDiv = styled.div`
         color: red;
       }
 
-      input{
-        cursor: pointer;
-        accent-color: #2686d4;
-        width: 20px;
-        height: 20px;
+      .checkbox{
+          position: absolute;
+          right: -60px;
+          background-color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 42px;
+          height: 42px;
+          border-radius: 5px;
+
+          input{
+            cursor: pointer;
+            accent-color: #2686d4;
+            width: 20px;
+            height: 20px;
+        }
       }
+
+      
     }
 `;

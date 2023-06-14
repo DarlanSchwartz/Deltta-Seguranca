@@ -71,7 +71,7 @@ export default function Client(props) {
         <ClientDiv show={props.show.toString()} onClick={view}>
             <p>{nome}</p>
             <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade }</p>
-            <p>{contato}</p>
+            <p>{contato != '' ? contato : '( -- ) -------------'}</p>
             <div className='actions'>
               <FaEdit onClick={edit} className='edit-icon'/>
               <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon'/>
@@ -116,6 +116,10 @@ const ClientDiv = styled.div`
     p:nth-child(2)
     {
       width: 500px;
+    }
+    p:nth-child(3)
+    {
+      width: 127px;
     }
     
 

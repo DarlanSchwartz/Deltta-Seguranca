@@ -52,10 +52,12 @@ export default function ViewClient()
                 <ViewClientDiv onClick={(e) => e.stopPropagation()}>
                     <p><strong>Nome: </strong> {viewingClient.nome}</p>
                     <p><strong>Endereço: </strong> {viewingClient.rua + ' ' + viewingClient.numero + ' - ' + viewingClient.bairro + ' - ' + viewingClient.cidade }</p>
+                    <p><strong>Contato 1: </strong> {viewingClient.contato != '' ? viewingClient.contato : '(--) ---- ----'}</p>
+                    {viewingClient.contato2 != '' && <p><strong>Contato 2: </strong> {viewingClient.contato2}</p>}
                     <p><strong>Forma de pagamento: </strong> {viewingClient.formadepagamento }</p>
                     <p><strong>Vencimento dia: </strong> {viewingClient.vencimento}</p>
                     <p><strong>Valor combinado: </strong> <em> R$ {viewingClient.valorCombinado}</em></p>
-                    <p><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
+                    <p className="obs"><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
                     <button><BsFillPrinterFill/>Imprimir Recibo</button>
                     <div className="actions">
                         <FaEdit onClick={edit} className="edit-btn"/>
@@ -71,6 +73,7 @@ export default function ViewClient()
 const ViewClientDiv = styled.div`
     max-width: 600px;
     max-height: 600px;
+    min-width: 450px;
     position: fixed;
     left: 50%;
     top: 50%;
@@ -82,6 +85,10 @@ const ViewClientDiv = styled.div`
     padding: 20px 20px 20px 20px;
     gap: 5px;
     overflow: hidden;
+
+    .obs{
+        width:70%;
+    }
 
     p{
         &:nth-child(1)

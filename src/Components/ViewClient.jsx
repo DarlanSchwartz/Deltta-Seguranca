@@ -60,7 +60,7 @@ export default function ViewClient()
                 <p><strong>Vencimento dia: </strong> {viewingClient.vencimento}</p>
                 <p><strong>Valor combinado: </strong> <em> R$ {viewingClient.valorCombinado}</em></p>
                 <p className="obs"><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
-                <button><BsFillPrinterFill/>Imprimir Recibo</button>
+                <button onClick={()=> alert("Isso ainda não faz nada!")}><BsFillPrinterFill/>Imprimir Recibo</button>
                 <div className="actions">
                     <FaEdit onClick={edit} className="edit-btn"/>
                     <RiDeleteBin6Fill onClick={deleteThis} className="delete-btn"/>

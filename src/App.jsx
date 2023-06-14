@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Clients from './Pages/Clients';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ClientsList from './Pages/ClientsList';
 
 //let blob = new Blob([`Nome: ${user.nome}\nEndereço: ${user.endereco}\nContato: ${user.contato}\nForma de pagamento: ${user.formadepagamento}`], {type: "text/plain;charset=utf-8"});
 //saveAs(blob, `Dados do usuario ${user.nome}.txt`);
@@ -127,7 +128,7 @@ export default function App() {
         vencimento: 12
       },
       {
-        id: 10,
+        id: 999,
         nome: 'Lucas Souza',
         rua: 'Rua das Oliveiras',
         numero: 55,
@@ -144,6 +145,7 @@ export default function App() {
   const [editingClient,setEditingClient] = useState(null);
   const [viewingClient,setViewingClient] = useState(null);
   const [clientSearchValue,setClientSearchValue] = useState('');
+  const [selectedUsers,setSelectedUsers] = useState([]);
 
   // Selecionar varios para deletar ou imprimir recibo
   // Imprimir recibos de um dia especifico
@@ -155,12 +157,13 @@ export default function App() {
   return (
     <BrowserRouter>
 
-      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient,clientSearchValue,setClientSearchValue}}>
+      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient,clientSearchValue,setClientSearchValue,selectedUsers,setSelectedUsers}}>
       <ToastContainer />
         <Navbar/>
         <Routes>
           <Route path='/' element={<RegisterClient />}/>
           <Route path='/clients' element={<Clients />}/>
+          <Route path='/clients-list' element={<ClientsList />}/>
         </Routes>
       </ClientsContext.Provider>
 

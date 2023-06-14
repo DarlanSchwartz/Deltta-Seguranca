@@ -6,10 +6,13 @@ import ViewClient from "../Components/ViewClient";
 import { AiTwotonePhone } from 'react-icons/ai';
 import { ImLocation } from 'react-icons/im';
 import { BsPersonLinesFill } from 'react-icons/bs';
-import { RiListOrdered } from 'react-icons/ri';
+import { RiPrinterFill ,RiDeleteBin6Fill,RiListOrdered } from 'react-icons/ri';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import trashIcon from '/trash.png';
 
 export default function Clients() {
-  const { usuarios, setUsuarios, clientSearchValue } = useContext(ClientsContext);
+  const { usuarios, setUsuarios, clientSearchValue,setSelectedUsers,selectedUsers } = useContext(ClientsContext);
   const [checkAll, setCheckAll] = useState(false);
   const [valorTotal, setValorTotal] = useState(0);
   const [vencemHoje, setVencemHoje] = useState(0);
@@ -36,6 +39,20 @@ export default function Clients() {
   useEffect(() => {
     ordernar('nome');
   }, []);
+
+  useEffect(()=>{
+    
+    if(checkAll)
+    {
+      console.log('Selected all');
+      setSelectedUsers(usuarios.map(usuario=> {return usuario.id}));
+    }
+    else
+    {
+      console.log('Deselected all');
+      setSelectedUsers([]);
+    }
+  },[checkAll])
 
   function ordernarPorNome() {
     if (usuarios !== null && usuarios != undefined) {
@@ -129,6 +146,40 @@ export default function Clients() {
     }
   }
 
+  function deleteSelected()
+  {
+      Swal.fire({
+        title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover estes ${selectedUsers.length} cliente(s)?</span>`,
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#07bc0c',
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        width: 300,
+        heightAuto: false,
+        imageUrl:trashIcon,
+        imageWidth: 100,
+        imageHeight: 100,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
+            position: "bottom-left",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+            });
+
+            const newUsers = usuarios.filter(user => !selectedUsers.includes(user.id));
+            setUsuarios(newUsers);
+            setCheckAll(false);
+        }
+      });
+  }
+
   return (
     <PageContainer>
 
@@ -149,12 +200,17 @@ export default function Clients() {
           <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
           <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
         </FilterDiv>
+        
         <IndicatorsDiv>
           <p>Nome <BsPersonLinesFill className="icon" /></p>
           <p>Endereço <ImLocation className="icon" /></p>
           <p>Telefone <AiTwotonePhone className="icon" /></p>
-          <input type="checkbox" onChange={(e) => setCheckAll(e.target.checked)} />
+          <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
         </IndicatorsDiv>
+        {selectedUsers.length > 0 && <div className="selection-actions">
+          <button onClick={deleteSelected}><RiDeleteBin6Fill/> Excluir Selecionados</button>
+          <button onClick={()=> alert("Isso ainda não faz nada!")}><RiPrinterFill/> Imprimir Selecionados</button>
+        </div>}
         {usuarios.length > 0 && usuarios.map((user) => {
           let hide = false;
 
@@ -270,6 +326,26 @@ const ClientsContainer = styled.div`
 
   justify-content: center;
   align-items: center;
+
+  .selection-actions{
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1220px;
+    justify-content: flex-end;
+    align-items: center;
+    padding-left: 40px;
+
+    button{
+      padding: 10px 10px 10px 10px;
+      border-radius: 20px;
+      border: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  }
 `;
 
 const PageContainer = styled.div`

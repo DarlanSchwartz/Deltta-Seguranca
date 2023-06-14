@@ -1,45 +1,49 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import {BsPersonFillAdd} from 'react-icons/bs';
-import {MdGroups2, MdPersonSearch} from 'react-icons/md';
+import { BsPersonFillAdd } from 'react-icons/bs';
+import { MdGroups2, MdPersonSearch } from 'react-icons/md';
 import { useContext, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
+import { RiPrinterFill } from 'react-icons/ri';
 
 
-export default function Navbar()
-{
+export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const {editingClient, setEditingClient,usuarios,setUsuarios,setClientSearchValue} = useContext(ClientsContext);
+    const { editingClient, setEditingClient, usuarios, setUsuarios, setClientSearchValue } = useContext(ClientsContext);
     const [showSearchIcon, setShowSeachIcon] = useState(true);
     const [searchValue, setSearchValue] = useState('');
 
 
-    function updateSearch(word)
-    {
+    function updateSearch(word) {
         setSearchValue(word);
         setClientSearchValue(word);
     }
 
     return (
-        <Header>
-            {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
-            {location.pathname !== '/' && 
-            <SearchBar>
-                <div className="input-container">
-                    <input value={searchValue} onChange={(e)=> updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={()=> setShowSeachIcon(false)} onBlur={()=> setShowSeachIcon(true)} />
-                    <MdPersonSearch className={`search-icon ${!showSearchIcon ? 'hide' : ''}`}/>
-                </div>
-            </SearchBar>}
-            <Actions>
-                <button onClick={()=> {navigate('/clients'); setEditingClient(null); }}><MdGroups2 className="icon-group"/>Clientes</button>
-                <button onClick={()=> navigate('/')}><BsPersonFillAdd className="icon-add"/> Cadastrar cliente</button>
-            </Actions>
-        </Header>
+        <>
+            {location.pathname != '/clients-list' &&
+                <Header>
+                    {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+                    {location.pathname !== '/' &&
+                        <SearchBar>
+                            <div className="input-container">
+                                <input value={searchValue} onChange={(e) => updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={() => setShowSeachIcon(false)} onBlur={() => setShowSeachIcon(true)} />
+                                <MdPersonSearch className={`search-icon ${!showSearchIcon ? 'hide' : ''}`} />
+                            </div>
+                        </SearchBar>}
+                    <Actions>
+                        <button onClick={() => { navigate('/clients'); setEditingClient(null); }}><MdGroups2 className="icon-group" />Clientes</button>
+                        <button onClick={() => navigate('/')}><BsPersonFillAdd className="icon-add" /> Cadastrar cliente</button>
+                        <RiPrinterFill onClick={() => { navigate('/clients-list'); setEditingClient(null); }} className="print-clients" />
+                    </Actions>
+                </Header>
+            }
+        </>
     );
 }
 
-const Header = styled.header`
+const Header = styled.nav`
 
   position: fixed;
   top: 0px;
@@ -53,7 +57,6 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   padding-left: 30px;
-  padding-right: 30px;
   z-index: 2;
 
   h1{
@@ -64,7 +67,7 @@ const Header = styled.header`
 
 `;
 
-const SearchBar=  styled.div `
+const SearchBar = styled.div`
     z-index: 3;
     display: flex;
     width: 100%;
@@ -115,9 +118,17 @@ const SearchBar=  styled.div `
 const Actions = styled.div`
 display:  flex;
 gap: 10px;
-margin-right: 10px;
-max-width: 280px;
+max-width: 340px;
 width: 100%;
+
+.print-clients{
+    font-size: 40px;
+    color:  #07bc0c;
+    cursor: pointer;
+    &:hover{
+        color: #67e26b;
+    }
+}
 
 button{
     border: 0;

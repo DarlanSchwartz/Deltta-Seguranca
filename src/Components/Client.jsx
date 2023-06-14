@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 
 export default function Client(props) {
-  const {setEditingClient,usuarios,setUsuarios,setViewingClient} = useContext(ClientsContext); 
+  const {setEditingClient,usuarios,setUsuarios,setViewingClient,setSelectedUsers,selectedUsers} = useContext(ClientsContext); 
 
   const {user,checked} = props;
   const  { nome, rua, contato , numero,bairro,cidade,vencimento} = user;
@@ -22,6 +22,22 @@ export default function Client(props) {
   useEffect(()=>{
     isChecked.current.checked = checked;
   },[checked])
+
+  function setChecked(checked)
+  {
+    let sUsers = [...selectedUsers];
+    
+    if(checked)
+    {
+      sUsers.push(user.id);
+      setSelectedUsers(sUsers);
+    }
+    else
+    {
+      sUsers = sUsers.filter(fuser => fuser != user.id)
+      setSelectedUsers(sUsers);
+    }
+  }
 
   function edit(e)
   {
@@ -69,7 +85,7 @@ export default function Client(props) {
   }
 
   return (
-        <ClientDiv show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
+        <ClientDiv id='client' client_id = {user.id} show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
             <p>{nome}</p>
             <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade }</p>
             <p>{contato != '' ? contato : '( -- ) -------------'}</p>
@@ -77,7 +93,7 @@ export default function Client(props) {
               <FaEdit onClick={edit} className='edit-icon'/>
               <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon'/>
               <div className='checkbox' onClick={(e) => e.stopPropagation()}>
-                <input ref={isChecked} type="checkbox" onClick={(e) => e.stopPropagation()}/>
+                <input className='checkbox-input' ref={isChecked} type="checkbox" onClick={(e) => {e.stopPropagation(); setChecked(e.target.checked)}}/>
               </div>
             </div>
         </ClientDiv>

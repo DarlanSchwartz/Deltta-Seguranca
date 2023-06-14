@@ -9,7 +9,7 @@ import {BsPersonLinesFill} from 'react-icons/bs';
 import {RiListOrdered} from 'react-icons/ri';
 
 export default function Clients() {
-    const { usuarios ,setUsuarios } = useContext(ClientsContext);
+    const { usuarios ,setUsuarios,clientSearchValue } = useContext(ClientsContext);
     const [checkAll,setCheckAll] = useState(false);
     const [valorTotal,setValorTotal] = useState(0);
     const orderSelect = useRef(null);
@@ -143,8 +143,8 @@ export default function Clients() {
                         <RiListOrdered className="icon"/>
                     </div>
                     <p>Quantidade de clientes: <span>{usuarios.length}</span></p>
-                    <p>Média por cliente: <span>R$ {(valorTotal / usuarios.length).toFixed(2)}</span></p>
-                    <p>Valor total: <span>R$ {valorTotal}</span></p>
+                    <p>Média por cliente: <span>R$ {(valorTotal / usuarios.length).toFixed(2).replace('.',',')}</span></p>
+                    <p>Valor total: <span>R$ {valorTotal.toString().replace('.',',')}</span></p>
                 </FilterDiv>
                 <IndicatorsDiv>
                     <p>Nome <BsPersonLinesFill className="icon"/></p>
@@ -153,8 +153,15 @@ export default function Clients() {
                     <input type="checkbox" onChange={(e) => setCheckAll(e.target.checked)} />
                 </IndicatorsDiv>
                 {usuarios.length > 0 && usuarios.map((user) => {
+                    let hide = false;
+                   
+                    if(user.nome.toLowerCase().includes(clientSearchValue.toLowerCase()))
+                    {
+                        hide = true;
+                    }
+
                     return (
-                        <Client user={user} key={user.id} checked={checkAll}/>
+                        <Client show={hide} user={user} key={user.id} checked={checkAll}/>
                     );
                 })}
             </ClientsContainer>

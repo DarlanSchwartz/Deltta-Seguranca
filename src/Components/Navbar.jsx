@@ -10,7 +10,7 @@ export default function Navbar()
 {
     const navigate = useNavigate();
     const location = useLocation();
-    const {editingClient, setEditingClient,usuarios,setUsuarios} = useContext(ClientsContext);
+    const {editingClient, setEditingClient,usuarios,setUsuarios,setClientSearchValue} = useContext(ClientsContext);
     const [showSearchIcon, setShowSeachIcon] = useState(true);
     const [searchValue, setSearchValue] = useState('');
 
@@ -18,6 +18,7 @@ export default function Navbar()
     function updateSearch(word)
     {
         setSearchValue(word);
+        setClientSearchValue(word);
     }
 
     return (

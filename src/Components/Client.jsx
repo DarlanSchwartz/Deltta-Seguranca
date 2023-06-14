@@ -68,8 +68,8 @@ export default function Client(props) {
   }
 
   return (
-        <ClientDiv onClick={view}>
-            <p>{ nome}</p>
+        <ClientDiv show={props.show.toString()} onClick={view}>
+            <p>{nome}</p>
             <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade }</p>
             <p>{contato}</p>
             <div className='actions'>
@@ -91,7 +91,7 @@ const ClientDiv = styled.div`
     color: #5e5e5e;
     width: 100%;
     max-width: 1100px;
-    display: flex;
+    display: ${(props) => props.show == 'true' ?  'flex' : 'none'};
     gap: 30px;
     height: 40px;
     align-items: center;

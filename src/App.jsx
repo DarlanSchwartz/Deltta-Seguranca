@@ -143,6 +143,7 @@ export default function App() {
     ]);
   const [editingClient,setEditingClient] = useState(null);
   const [viewingClient,setViewingClient] = useState(null);
+  const [clientSearchValue,setClientSearchValue] = useState('');
 
   // Selecionar varios para deletar ou imprimir recibo
   // Filtrar por : Valor pago, Dia do pagamento, nome do cliente, endereço
@@ -154,7 +155,7 @@ export default function App() {
   return (
     <BrowserRouter>
 
-      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient }}>
+      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient,clientSearchValue,setClientSearchValue}}>
       <ToastContainer />
         <Navbar/>
         <Routes>

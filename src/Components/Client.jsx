@@ -13,9 +13,10 @@ export default function Client(props) {
   const {setEditingClient,usuarios,setUsuarios,setViewingClient} = useContext(ClientsContext); 
 
   const {user,checked} = props;
-  const  { nome, rua, contato , numero,bairro,cidade} = user;
+  const  { nome, rua, contato , numero,bairro,cidade,vencimento} = user;
   const isChecked = useRef(null);
   const navigate = useNavigate();
+  const today = new Date().getDate();
 
 
   useEffect(()=>{
@@ -68,7 +69,7 @@ export default function Client(props) {
   }
 
   return (
-        <ClientDiv show={props.show.toString()} onClick={view}>
+        <ClientDiv show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
             <p>{nome}</p>
             <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade }</p>
             <p>{contato != '' ? contato : '( -- ) -------------'}</p>
@@ -111,6 +112,8 @@ const ClientDiv = styled.div`
     p:nth-child(1)
     {
       width: 300px;
+      color: ${(props) => props.expires_today == 'true' ? 'red' : 'black'};
+      font-weight: ${(props) => props.expires_today == 'true' ? 'bold' : 'normal'};
     }
 
     p:nth-child(2)
@@ -155,6 +158,7 @@ const ClientDiv = styled.div`
           width: 42px;
           height: 42px;
           border-radius: 5px;
+          cursor: auto;
 
           input{
             cursor: pointer;

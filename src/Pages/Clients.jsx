@@ -3,172 +3,174 @@ import Client from "../Components/Client";
 import { useContext, useEffect, useRef, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import ViewClient from "../Components/ViewClient";
-import {AiTwotonePhone} from 'react-icons/ai';
-import {ImLocation} from 'react-icons/im';
-import {BsPersonLinesFill} from 'react-icons/bs';
-import {RiListOrdered} from 'react-icons/ri';
+import { AiTwotonePhone } from 'react-icons/ai';
+import { ImLocation } from 'react-icons/im';
+import { BsPersonLinesFill } from 'react-icons/bs';
+import { RiListOrdered } from 'react-icons/ri';
 
 export default function Clients() {
-    const { usuarios ,setUsuarios,clientSearchValue } = useContext(ClientsContext);
-    const [checkAll,setCheckAll] = useState(false);
-    const [valorTotal,setValorTotal] = useState(0);
-    const orderSelect = useRef(null);
-    const today = new Date().getDate();
+  const { usuarios, setUsuarios, clientSearchValue } = useContext(ClientsContext);
+  const [checkAll, setCheckAll] = useState(false);
+  const [valorTotal, setValorTotal] = useState(0);
+  const [vencemHoje, setVencemHoje] = useState(0);
+  const orderSelect = useRef(null);
+  const today = new Date().getDate();
 
-    useEffect(()=>{
-        let value = 0;
-       usuarios.forEach(usuario => {
-            value +=Number(usuario.valorCombinado);
-       });
+  useEffect(() => {
+    let value = 0;
+    let value2 = 0;
+    usuarios.forEach(usuario => {
+      value += Number(usuario.valorCombinado);
 
-       setValorTotal(value.toFixed(2));
+      if(usuario.vencimento == today)
+      {
+        value2++;
+      }
+    });
 
-       ordernar('nome');
-    },[]);
+    setValorTotal(value.toFixed(2));
+    
+    setVencemHoje(value2);
+  }, [usuarios]);
 
-    function ordernarPorNome()
-    {
-        if(usuarios !== null && usuarios != undefined)
-        {
-            const users = [...usuarios];
-            
-            users.sort((a, b) => {
-                if (a.nome.toLowerCase()  < b.nome.toLowerCase() ) {
-                  return -1;
-                } else if (a.nome.toLowerCase()  > b.nome.toLowerCase() ) {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
+  useEffect(() => {
+    ordernar('nome');
+  }, []);
 
-              setUsuarios(users);
+  function ordernarPorNome() {
+    if (usuarios !== null && usuarios != undefined) {
+      const users = [...usuarios];
+
+      users.sort((a, b) => {
+        if (a.nome.toLowerCase() < b.nome.toLowerCase()) {
+          return -1;
+        } else if (a.nome.toLowerCase() > b.nome.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
         }
+      });
+
+      setUsuarios(users);
     }
+  }
 
-    function ordernarPorValor()
-    {
-        if(usuarios !== null && usuarios != undefined)
-        {
-            const users = [...usuarios];
-            
-            users.sort((a, b) => {
-                if (a.valorCombinado > b.valorCombinado) {
-                  return -1;
-                } else if (a.valorCombinado < b.valorCombinado) {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
+  function ordernarPorValor() {
+    if (usuarios !== null && usuarios != undefined) {
+      const users = [...usuarios];
 
-              setUsuarios(users);
+      users.sort((a, b) => {
+        if (a.valorCombinado > b.valorCombinado) {
+          return -1;
+        } else if (a.valorCombinado < b.valorCombinado) {
+          return 1;
+        } else {
+          return 0;
         }
+      });
+
+      setUsuarios(users);
     }
+  }
 
-    function ordernarPorDia()
-    {
-        if(usuarios !== null && usuarios != undefined)
-        {
-            const users = [...usuarios];
-            
-            users.sort((a, b) => {
-                if (a.vencimento < b.vencimento) {
-                  return -1;
-                } else if (a.vencimento > b.vencimento) {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
+  function ordernarPorDia() {
+    if (usuarios !== null && usuarios != undefined) {
+      const users = [...usuarios];
 
-              setUsuarios(users);
+      users.sort((a, b) => {
+        if (a.vencimento < b.vencimento) {
+          return -1;
+        } else if (a.vencimento > b.vencimento) {
+          return 1;
+        } else {
+          return 0;
         }
+      });
+
+      setUsuarios(users);
     }
+  }
 
-    function ordernarPorCidade()
-    {
-        if(usuarios !== null && usuarios != undefined)
-        {
-            const users = [...usuarios];
-            
-            users.sort((a, b) => {
-                if (a.cidade.toLowerCase() > b.cidade.toLowerCase()) {
-                  return -1;
-                } else if (a.cidade.toLowerCase()  < b.cidade.toLowerCase() ) {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
+  function ordernarPorCidade() {
+    if (usuarios !== null && usuarios != undefined) {
+      const users = [...usuarios];
 
-              setUsuarios(users);
+      users.sort((a, b) => {
+        if (a.cidade.toLowerCase() > b.cidade.toLowerCase()) {
+          return -1;
+        } else if (a.cidade.toLowerCase() < b.cidade.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
         }
+      });
+
+      setUsuarios(users);
     }
+  }
 
-    function ordernar(por)
-    {
-        switch (por) {
-            case 'nome':
-                ordernarPorNome();
-                break;
-            case 'valor':
-                ordernarPorValor();
-                break;
-            case 'cidade':
-                ordernarPorCidade();
-                break;
-            case 'dia':
-                ordernarPorDia();
-                break;
-            default:
-                ordernarPorNome();
-                break;
-        }
-    }   
+  function ordernar(por) {
+    switch (por) {
+      case 'nome':
+        ordernarPorNome();
+        break;
+      case 'valor':
+        ordernarPorValor();
+        break;
+      case 'cidade':
+        ordernarPorCidade();
+        break;
+      case 'dia':
+        ordernarPorDia();
+        break;
+      default:
+        ordernarPorNome();
+        break;
+    }
+  }
 
-    return (
-        <PageContainer>
-            
-            <ClientsContainer className="clients-container">
-                <FilterDiv>
-                    <div className="order-div">
-                        <p>Ordenar por </p>
-                        <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
-                            <option value="nome">Nome</option>
-                            <option value="valor">Valor Pago</option>
-                            <option value="cidade">Cidade</option>
-                            <option value="dia">Vencimento</option>
-                        </select>
-                        <RiListOrdered className="icon"/>
-                    </div>
-                    <p>Quantidade de clientes: <span>{usuarios.length}</span></p>
-                    <p>Média por cliente: <span>R$ {(valorTotal / usuarios.length).toFixed(2).replace('.',',')}</span></p>
-                    <p>Valor total: <span>R$ {valorTotal.toString().replace('.',',')}</span></p>
-                </FilterDiv>
-                <IndicatorsDiv>
-                    <p>Nome <BsPersonLinesFill className="icon"/></p>
-                    <p>Endereço <ImLocation className="icon"/></p>
-                    <p>Telefone <AiTwotonePhone className="icon"/></p>
-                    <input type="checkbox" onChange={(e) => setCheckAll(e.target.checked)} />
-                </IndicatorsDiv>
-                {usuarios.length > 0 && usuarios.map((user) => {
-                    let hide = false;
-                   
-                    if(user.nome.toLowerCase().includes(clientSearchValue.toLowerCase()))
-                    {
-                        hide = true;
-                    }
+  return (
+    <PageContainer>
 
-                    return (
-                        <Client show={hide} user={user} key={user.id} checked={checkAll}/>
-                    );
-                })}
-            </ClientsContainer>
-            <ViewClient/>
-                
-        </PageContainer>
-    );
+      <ClientsContainer className="clients-container">
+        <FilterDiv>
+          <div className="order-div">
+            <p>Ordenar por </p>
+            <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
+              <option value="nome">Nome</option>
+              <option value="valor">Valor Pago</option>
+              <option value="cidade">Cidade</option>
+              <option value="dia">Vencimento</option>
+            </select>
+            <RiListOrdered className="icon" />
+          </div>
+          <p>Quantidade de clientes: <span>{usuarios.length}</span></p>
+          <p>Média por cliente: <span>R$ {(valorTotal / usuarios.length).toFixed(2).replace('.', ',')}</span></p>
+          <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
+          <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
+        </FilterDiv>
+        <IndicatorsDiv>
+          <p>Nome <BsPersonLinesFill className="icon" /></p>
+          <p>Endereço <ImLocation className="icon" /></p>
+          <p>Telefone <AiTwotonePhone className="icon" /></p>
+          <input type="checkbox" onChange={(e) => setCheckAll(e.target.checked)} />
+        </IndicatorsDiv>
+        {usuarios.length > 0 && usuarios.map((user) => {
+          let hide = false;
+
+          if (user.nome.toLowerCase().includes(clientSearchValue.toLowerCase())) {
+            hide = true;
+          }
+
+          return (
+            <Client show={hide} user={user} key={user.id} checked={checkAll} />
+          );
+        })}
+      </ClientsContainer>
+      <ViewClient />
+
+    </PageContainer>
+  );
 }
 
 const FilterDiv = styled.div`
@@ -248,6 +250,12 @@ const FilterDiv = styled.div`
                 color: blue;
             }
         }
+        &:nth-child(5)
+        {
+            span {
+                color: red;
+            }
+        }
    }
 
 
@@ -314,6 +322,7 @@ const IndicatorsDiv = styled.div`
         margin-top: 2px;
       }
     }
+    
 
     input{
         width: 20px;

@@ -3,14 +3,14 @@ import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import logo from '/logotipo.png';
-import { converterValorPorExtenso , obterMesAtualPorExtenso , obterAnoAtual} from "../utils";
+import { converterValorPorExtenso, obterMesAtualPorExtenso, obterAnoAtual } from "../utils";
 export default function ClientsReceipt() {
     const { usuarios } = useContext(ClientsContext);
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [showBackButton,setShowBackButton] = useState(false);
-
+    const [showBackButton, setShowBackButton] = useState(false);
+    //{`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}
     useEffect(() => {
         setTimeout(() => {
             window.print();
@@ -20,40 +20,46 @@ export default function ClientsReceipt() {
 
     return (
         <PageContainer>
-            { showBackButton && <button onClick={() => navigate('/clients')}>Voltar</button>}
+            {showBackButton && <button onClick={() => navigate('/clients')}>Voltar</button>}
             <ClientsContainer>
                 {usuarios.map((usuario) => {
                     return (
                         <>
-                        {   location.state.ids.includes(usuario.id) &&
-                            
-                            <ReceiptContainer key={usuario.id}>
-                            <div className="logo">
-                                <img src={logo} alt="" />
-                            </div>
-                            <div className="main-info">
-                                <p>MONITORAMENTO E PORTARIA 24hrs</p>
-                                <p>Fone:(51) 99067-8532</p>
-                            </div>
-                            <div className="value-and-id">
-                                <p>RECIBO Nº {usuario.id}</p>
-                                <p>VALOR: R$ {usuario.valorCombinado.toFixed(2).replace('.',',')}</p>
-                            </div>
-                            <div className="user-info">
-                                <p>Recebemos de {usuario.nome}</p>
-                                <p>End: {`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}</p>
-                            </div>
-                            <div className="redundant-info">
-                                <p>A quantida de: {converterValorPorExtenso(usuario.valorCombinado)}</p>
-                                <p>Proveniente de <span>MONITORAMENTO</span></p>
-                            </div>
-                            <p className="day-info">Novo Hamburgo , {usuario.vencimento} de {obterMesAtualPorExtenso().toUpperCase()} de {obterAnoAtual()}</p>
-                            <div className="redundant-info2">
-                                <p>{usuario.nome} ???</p>
-                                <p>OBS:Este recibo será validado ASSINADO ou CARIMBADO</p>
-                            </div>
-                        </ReceiptContainer>
-                        }
+                            {location.state.ids.includes(usuario.id) &&
+
+                                <ReceiptContainer key={usuario.id}>
+                                    <div className="logo">
+                                        <div className="content">
+                                            <img src={logo} alt="" />
+                                            <div className="main-info">
+                                                <p>Fone: (51) 99607-8532</p>
+                                                <p>email: segurancadeltta@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="value-and-id">
+                                        <p>RECIBO Nº {usuario.id}</p>
+                                        <p>VALOR: R$ {Number(usuario.valorCombinado).toFixed(2).replace('.', ',')}</p>
+                                    </div>
+                                    <div className="user-info">
+                                        <p>Recebi(emos) de {usuario.nome}</p>
+                                        <p>A quantida de: {converterValorPorExtenso(usuario.valorCombinado).toUpperCase()}</p>
+                                    </div>
+                                    <div className="redundant-info">
+                                        <p>Valor Ref. a PRESTAÇÃO DE SERVIÇO DE MONITORAMENTO.</p>
+                                        <p>e para clareza firmo(amos) o presente,</p>
+                                        <p>{`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}</p>
+                                    </div>
+                                    <p className="day-info">Novo Hamburgo , {usuario.vencimento} de {obterMesAtualPorExtenso().toUpperCase()} de {obterAnoAtual()}.</p>
+                                    
+                                    <div className="final-info">
+                                        <p>CPF/CNPJ:</p>
+                                        <p>Emitente: </p>
+                                        <p>Endereço: </p>
+                                    </div>
+                                </ReceiptContainer>
+                            }
                         </>
                     );
                 })}
@@ -110,8 +116,8 @@ const ClientsContainer = styled.div`
 `;
 
 const ReceiptContainer = styled.div`
-    width: 370px;
-    height: 410px;
+    width: 390px;
+    height: 500px;
     background-color: white;
     border: 2px solid black;
 
@@ -131,15 +137,30 @@ const ReceiptContainer = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        img{
-            height: 80%;
+
+        .content
+        {   
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            height: 100%;
+            img{
+                height: 80%;
+            }
+
+            p{
+                &:nth-child(2)
+                {
+                    margin-bottom: 10px;
+                }
+            }
         }
+       
     }
 
     .main-info{
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
         padding-top: 10px;
         font-weight: bold;
@@ -166,11 +187,13 @@ const ReceiptContainer = styled.div`
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding-left: 5px;
         font-size: 13px;
         width: 100%;
         gap: 7px;
         height: 60px;
+        font-weight: bold;
     }
 
     .redundant-info{
@@ -181,42 +204,56 @@ const ReceiptContainer = styled.div`
         font-size: 13px;
         width: 100%;
         gap: 7px;
-        height: 60px;   
+        height: 90px;   
+        font-weight: bold;
+        P{
+            &:nth-child(1)
+            {
+                font-size: 12px;
+            }
+            &:nth-child(3)
+            {
+                font-size: 12px;
+                padding-top: 20px;
+            }
+        }
         span{
             font-weight: bold;
         }
     }
 
-    .day-info{
-        font-size: 13px;
-        width: 100%;
-        padding-left: 5px;
-        border-bottom: 2px solid black;
-        height: 60px;
-        display: flex;
-        align-items: flex-end;
-        padding-bottom: 2px;
-    }
-
-    .redundant-info2{
+    .cpf-cnpj{
         display: flex;
         flex-direction: column;
         justify-content: center;
         padding-left: 5px;
         font-size: 13px;
         width: 100%;
+        height: 40px;
+        font-weight: bold;
+    }
+
+    .day-info{
+        font-size: 13px;
+        width: 100%;
+        padding-left: 5px;
+        height: 40px;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 2px;
+        font-weight: bold;
+    }
+
+    .final-info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 5px;
+        font-size: 13px;
+        padding-top: 60px;
+        width: 100%;
         height: 50px;
         gap: 7px;
-
-        p{
-            font-weight: bold;
-            align-self: center;
-
-            &:nth-child(2)
-            {
-                font-size: 10px;
-                align-self:self-start;
-            }
-        }
+        font-weight: bold;
     }
 `;

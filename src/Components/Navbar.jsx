@@ -6,6 +6,8 @@ import { useContext, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { RiPrinterFill } from 'react-icons/ri';
 
+// 
+
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ export default function Navbar() {
 
     return (
         <>
-            {location.pathname != '/clients-list' &&
+            {location.pathname != '/clients-list' && location.pathname != '/clients-receipts' &&
                 <Header>
                     {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
                     {location.pathname !== '/' &&

@@ -44,6 +44,13 @@ export default function ViewClient()
         }
       });
     }
+
+    function printThis(e)
+    {
+        e.stopPropagation();
+        navigate(`/clients-receipts`,{state:{ids:[viewingClient.id]}});
+        setViewingClient(null);
+    }
     
     return (
        <>
@@ -60,7 +67,7 @@ export default function ViewClient()
                 <p><strong>Vencimento dia: </strong> {viewingClient.vencimento}</p>
                 <p><strong>Valor combinado: </strong> <em> R$ {viewingClient.valorCombinado}</em></p>
                 <p className="obs"><strong>Obs: </strong>{viewingClient.observacao == '' ? '--------' : viewingClient.observacao}</p>
-                <button onClick={()=> alert("Isso ainda não faz nada!")}><BsFillPrinterFill/>Imprimir Recibo</button>
+                <button onClick={printThis}><BsFillPrinterFill/>Imprimir Recibo</button>
                 <div className="actions">
                     <FaEdit onClick={edit} className="edit-btn"/>
                     <RiDeleteBin6Fill onClick={deleteThis} className="delete-btn"/>
@@ -87,6 +94,7 @@ const ViewClientDiv = styled.div`
     padding: 20px 20px 20px 20px;
     gap: 5px;
     overflow: hidden;
+    z-index:3;
 
     .obs{
         width:70%;
@@ -153,4 +161,5 @@ const Modal = styled.div`
     position: fixed;
     left: 0;
     top: 0;
+    z-index:2;
 `;

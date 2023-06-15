@@ -7,6 +7,7 @@ import Clients from './Pages/Clients';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ClientsList from './Pages/ClientsList';
+import ClientsReceipt from './Pages/ClientsReceipt';
 
 //let blob = new Blob([`Nome: ${user.nome}\nEndereço: ${user.endereco}\nContato: ${user.contato}\nForma de pagamento: ${user.formadepagamento}`], {type: "text/plain;charset=utf-8"});
 //saveAs(blob, `Dados do usuario ${user.nome}.txt`);
@@ -95,7 +96,7 @@ export default function App() {
       contato: '(22) 66666-6666',
       contato2: '',
       formadepagamento: 'Boleto',
-      valorCombinado: 120,
+      valorCombinado: 1500,
       observacao: '',
       vencimento: 1
     },
@@ -109,7 +110,7 @@ export default function App() {
         contato: '(31) 11111-1111',
         contato2: '',
         formadepagamento: 'Dinheiro/Pix',
-        valorCombinado: 190,
+        valorCombinado: 5,
         observacao: 'Cliente possui alergia a determinado ingrediente',
         vencimento: 7
       },
@@ -137,7 +138,7 @@ export default function App() {
         contato: '(11) 66666-6666',
         contato2: '',
         formadepagamento: 'Dinheiro/Pix',
-        valorCombinado: 220,
+        valorCombinado: 15,
         observacao: 'Cliente solicitou entrega após as 18h',
         vencimento: 18
       },
@@ -147,12 +148,8 @@ export default function App() {
   const [clientSearchValue,setClientSearchValue] = useState('');
   const [selectedUsers,setSelectedUsers] = useState([]);
 
-  // Selecionar varios para deletar ou imprimir recibo
+  // Selecionar varios para imprimir recibo
   // Imprimir recibos de um dia especifico
-  // Possibilidade de gerar a lista de clientes com -> Vencimento , ID ,  Nome , Endereço , Valor
-  //                                               Vencimento      ID            Nome                             Endereço   
-  //                                                   10          10      Valdemar da costa    Rua Santiago 467 - Bela Vista - Novo Hamburgo
-  // Atualizar valor total e médio ao excluir cliente
 
   return (
     <BrowserRouter>
@@ -164,6 +161,7 @@ export default function App() {
           <Route path='/' element={<RegisterClient />}/>
           <Route path='/clients' element={<Clients />}/>
           <Route path='/clients-list' element={<ClientsList />}/>
+          <Route path='/clients-receipts' element={<ClientsReceipt/>}/>
         </Routes>
       </ClientsContext.Provider>
 

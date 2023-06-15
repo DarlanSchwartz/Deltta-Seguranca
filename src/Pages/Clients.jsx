@@ -6,18 +6,20 @@ import ViewClient from "../Components/ViewClient";
 import { AiTwotonePhone } from 'react-icons/ai';
 import { ImLocation } from 'react-icons/im';
 import { BsPersonLinesFill } from 'react-icons/bs';
-import { RiPrinterFill ,RiDeleteBin6Fill,RiListOrdered } from 'react-icons/ri';
+import { RiPrinterFill, RiDeleteBin6Fill, RiListOrdered } from 'react-icons/ri';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import trashIcon from '/trash.png';
+import { useNavigate } from "react-router-dom";
 
 export default function Clients() {
-  const { usuarios, setUsuarios, clientSearchValue,setSelectedUsers,selectedUsers } = useContext(ClientsContext);
+  const { usuarios, setUsuarios, clientSearchValue, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
   const [checkAll, setCheckAll] = useState(false);
   const [valorTotal, setValorTotal] = useState(0);
   const [vencemHoje, setVencemHoje] = useState(0);
   const orderSelect = useRef(null);
   const today = new Date().getDate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let value = 0;
@@ -25,14 +27,13 @@ export default function Clients() {
     usuarios.forEach(usuario => {
       value += Number(usuario.valorCombinado);
 
-      if(usuario.vencimento == today)
-      {
+      if (usuario.vencimento == today) {
         value2++;
       }
     });
 
     setValorTotal(value.toFixed(2));
-    
+
     setVencemHoje(value2);
   }, [usuarios]);
 
@@ -40,19 +41,15 @@ export default function Clients() {
     ordernar('nome');
   }, []);
 
-  useEffect(()=>{
-    
-    if(checkAll)
-    {
-      console.log('Selected all');
-      setSelectedUsers(usuarios.map(usuario=> {return usuario.id}));
+  useEffect(() => {
+
+    if (checkAll) {
+      setSelectedUsers(usuarios.map(usuario => { return usuario.id }));
     }
-    else
-    {
-      console.log('Deselected all');
+    else {
       setSelectedUsers([]);
     }
-  },[checkAll])
+  }, [checkAll]);
 
   function ordernarPorNome() {
     if (usuarios !== null && usuarios != undefined) {
@@ -146,38 +143,42 @@ export default function Clients() {
     }
   }
 
-  function deleteSelected()
-  {
-      Swal.fire({
-        title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover estes ${selectedUsers.length} cliente(s)?</span>`,
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#07bc0c',
-        confirmButtonText: 'Remover',
-        cancelButtonText: 'Cancelar',
-        width: 300,
-        heightAuto: false,
-        imageUrl:trashIcon,
-        imageWidth: 100,
-        imageHeight: 100,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
-            position: "bottom-left",
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "colored",
-            });
+  function deleteSelected() {
+    Swal.fire({
+      title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover estes ${selectedUsers.length} cliente(s)?</span>`,
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#07bc0c',
+      confirmButtonText: 'Remover',
+      cancelButtonText: 'Cancelar',
+      width: 300,
+      heightAuto: false,
+      imageUrl: trashIcon,
+      imageWidth: 100,
+      imageHeight: 100,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
+          position: "bottom-left",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+        });
 
-            const newUsers = usuarios.filter(user => !selectedUsers.includes(user.id));
-            setUsuarios(newUsers);
-            setCheckAll(false);
-        }
-      });
+        const newUsers = usuarios.filter(user => !selectedUsers.includes(user.id));
+        setUsuarios(newUsers);
+        setCheckAll(false);
+      }
+    });
+  }
+
+  function imprimirSelecionados()
+  {
+    navigate(`/clients-receipts`,{state:{ids:selectedUsers.map(user => user)}});
   }
 
   return (
@@ -200,7 +201,7 @@ export default function Clients() {
           <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
           <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
         </FilterDiv>
-        
+
         <IndicatorsDiv>
           <p>Nome <BsPersonLinesFill className="icon" /></p>
           <p>Endereço <ImLocation className="icon" /></p>
@@ -208,8 +209,8 @@ export default function Clients() {
           <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
         </IndicatorsDiv>
         {selectedUsers.length > 0 && <div className="selection-actions">
-          <button onClick={deleteSelected}><RiDeleteBin6Fill/> Excluir Selecionados</button>
-          <button onClick={()=> alert("Isso ainda não faz nada!")}><RiPrinterFill/> Imprimir Selecionados</button>
+          <button onClick={deleteSelected}><RiDeleteBin6Fill /> Excluir Selecionados</button>
+          <button onClick={imprimirSelecionados}><RiPrinterFill /> Imprimir Selecionados</button>
         </div>}
         {usuarios.length > 0 && usuarios.map((user) => {
           let hide = false;

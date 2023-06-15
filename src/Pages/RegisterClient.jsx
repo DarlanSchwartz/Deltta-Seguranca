@@ -122,7 +122,8 @@ export default function RegisterClient() {
     
             //console.log(newObj);
             notify('register');
-            setUsuarios([...usuarios, newObj]);
+            const newUsers = [...usuarios, newObj];
+            setUsuarios(newUsers);
             limparCampos();
        }
        else

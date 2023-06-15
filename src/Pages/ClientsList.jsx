@@ -27,7 +27,7 @@ export default function ClientsList() {
                 </ListHeader>
                 {usuarios.map((usuario) => {
                     return (
-                        <User>
+                        <User key={usuario.id}>
                             <p>{usuario.vencimento}</p>
                             <p>{usuario.id}</p>
                             <p>{usuario.nome}</p>

@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
-import { formatarTelefone ,formatValorCombinado,saveClientsTextFile } from "../utils";
+import { formatarTelefone ,formatValorCombinado,saveClients,saveClientsTextFile } from "../utils";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
@@ -94,8 +94,7 @@ export default function RegisterClient() {
        {
             let clientIds = [];
             
-
-            if (usuarios.length > 0) {
+            if (usuarios !== null && usuarios !== undefined && usuarios.length > 0) {
                 usuarios.forEach(user => {
                     clientIds.push(user.id);
                 });
@@ -119,10 +118,10 @@ export default function RegisterClient() {
                 observacao: observacao,
                 vencimento:vencimento
             };
-    
-            //console.log(newObj);
+
             notify('register');
             const newUsers = [...usuarios, newObj];
+            saveClients(newUsers);
             setUsuarios(newUsers);
             limparCampos();
        }
@@ -146,12 +145,13 @@ export default function RegisterClient() {
             notify('edit');
             const filteredUsers = usuarios.filter(user => user.id != editingClientId);
             filteredUsers.push(newObj);
+            saveClients(filteredUsers);
             setUsuarios([...filteredUsers]);
             setEditingClient(null);
             limparCampos();
             navigate('/clients');
        }
-    }
+}
 
    
 

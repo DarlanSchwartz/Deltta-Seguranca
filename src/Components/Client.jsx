@@ -4,50 +4,46 @@ import ClientsContext from '../Contexts/ClientsContext';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import trashIcon from '/trash.png';
-import {FaEdit} from 'react-icons/fa';
-import {RiDeleteBin6Fill} from 'react-icons/ri';
+import { FaEdit } from 'react-icons/fa';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
+import { saveClients } from '../utils';
 
 
 export default function Client(props) {
-  const {setEditingClient,usuarios,setUsuarios,setViewingClient,setSelectedUsers,selectedUsers} = useContext(ClientsContext); 
+  const { setEditingClient, usuarios, setUsuarios, setViewingClient, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
 
-  const {user,checked} = props;
-  const  { nome, rua, contato , numero,bairro,cidade,vencimento} = user;
+  const { user, checked } = props;
+  const { nome, rua, contato, numero, bairro, cidade, vencimento } = user;
   const isChecked = useRef(null);
   const navigate = useNavigate();
   const today = new Date().getDate();
 
 
-  useEffect(()=>{
+  useEffect(() => {
     isChecked.current.checked = checked;
-  },[checked])
+  }, [checked])
 
-  function setChecked(checked)
-  {
+  function setChecked(checked) {
     let sUsers = [...selectedUsers];
-    
-    if(checked)
-    {
+
+    if (checked) {
       sUsers.push(user.id);
       setSelectedUsers(sUsers);
     }
-    else
-    {
+    else {
       sUsers = sUsers.filter(fuser => fuser != user.id)
       setSelectedUsers(sUsers);
     }
   }
 
-  function edit(e)
-  {
+  function edit(e) {
     e.stopPropagation();
     setEditingClient(user);
     navigate('/');
   }
 
-  function deleteThis(e)
-  {
+  function deleteThis(e) {
     e.stopPropagation();
     Swal.fire({
       title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover ${nome}?</span>`,
@@ -58,7 +54,7 @@ export default function Client(props) {
       cancelButtonText: 'Cancelar',
       width: 300,
       heightAuto: false,
-      imageUrl:trashIcon,
+      imageUrl: trashIcon,
       imageWidth: 100,
       imageHeight: 100,
     }).then((result) => {
@@ -72,32 +68,33 @@ export default function Client(props) {
           draggable: false,
           progress: undefined,
           theme: "colored",
-          });
-        setUsuarios(usuarios.filter(fuser => fuser.id != user.id));
+        });
+        const newUsers = usuarios.filter(fuser => fuser.id != user.id);
+        saveClients(newUsers);
+        setUsuarios(newUsers);
       }
     });
   }
 
-  function view(e)
-  {
+  function view(e) {
     e.stopPropagation();
     setViewingClient(user);
   }
 
   return (
-        <ClientDiv id='client' client_id = {user.id} show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
-            <p>{nome}</p>
-            <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade }</p>
-            <p>{contato != '' ? contato : '( -- ) -------------'}</p>
-            <div className='actions'>
-              <FaEdit onClick={edit} className='edit-icon'/>
-              <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon'/>
-              <div className='checkbox' onClick={(e) => e.stopPropagation()}>
-                <input className='checkbox-input' ref={isChecked} type="checkbox" onClick={(e) => {e.stopPropagation(); setChecked(e.target.checked)}}/>
-              </div>
-            </div>
-        </ClientDiv>
-    );
+    <ClientDiv id='client' client_id={user.id} show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
+      <p>{nome}</p>
+      <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade}</p>
+      <p>{contato != '' ? contato : '( -- ) -------------'}</p>
+      <div className='actions'>
+        <FaEdit onClick={edit} className='edit-icon' />
+        <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon' />
+        <div className='checkbox' onClick={(e) => e.stopPropagation()}>
+          <input className='checkbox-input' ref={isChecked} type="checkbox" onClick={(e) => { e.stopPropagation(); setChecked(e.target.checked) }} />
+        </div>
+      </div>
+    </ClientDiv>
+  );
 }
 
 
@@ -108,7 +105,7 @@ const ClientDiv = styled.div`
     color: #5e5e5e;
     width: 100%;
     max-width: 1100px;
-    display: ${(props) => props.show == 'true' ?  'flex' : 'none'};
+    display: ${(props) => props.show == 'true' ? 'flex' : 'none'};
     gap: 30px;
     height: 40px;
     align-items: center;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ClientsContext from './Contexts/ClientsContext';
 import RegisterClient from './Pages/RegisterClient';
 import Navbar from './Components/Navbar';
@@ -8,15 +8,39 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ClientsList from './Pages/ClientsList';
 import ClientsReceipt from './Pages/ClientsReceipt';
-
-//let blob = new Blob([`Nome: ${user.nome}\nEndereço: ${user.endereco}\nContato: ${user.contato}\nForma de pagamento: ${user.formadepagamento}`], {type: "text/plain;charset=utf-8"});
-//saveAs(blob, `Dados do usuario ${user.nome}.txt`);
-//import { saveAs } from 'file-saver';
+import { loadClients } from './utils';
 
 export default function App() {
 
-  const [usuarios, setUsuarios] = useState([
-    {
+  const [usuarios, setUsuarios] = useState([]);
+  const [editingClient,setEditingClient] = useState(null);
+  const [viewingClient,setViewingClient] = useState(null);
+  const [clientSearchValue,setClientSearchValue] = useState('');
+  const [selectedUsers,setSelectedUsers] = useState([]);
+
+  useEffect(()=>{
+    setUsuarios(loadClients());
+  },[]);
+
+
+  return (
+    <BrowserRouter>
+      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient,clientSearchValue,setClientSearchValue,selectedUsers,setSelectedUsers}}>
+        <ToastContainer />
+        <Navbar/>
+        <Routes>
+          <Route path='/' element={<RegisterClient />}/>
+          <Route path='/clients' element={<Clients />}/>
+          <Route path='/clients-list' element={<ClientsList />}/>
+          <Route path='/clients-receipts' element={<ClientsReceipt/>}/>
+        </Routes>
+      </ClientsContext.Provider>
+    </BrowserRouter>
+  );
+}
+
+/*
+ {
       id: 1,
       nome: 'João Silva',
       rua: 'Rua das Flores',
@@ -142,32 +166,7 @@ export default function App() {
         observacao: 'Cliente solicitou entrega após as 18h',
         vencimento: 18
       },
-    ]);
-  const [editingClient,setEditingClient] = useState(null);
-  const [viewingClient,setViewingClient] = useState(null);
-  const [clientSearchValue,setClientSearchValue] = useState('');
-  const [selectedUsers,setSelectedUsers] = useState([]);
-
-  // Selecionar varios para imprimir recibo
-  // Imprimir recibos de um dia especifico
-
-  return (
-    <BrowserRouter>
-
-      <ClientsContext.Provider value={{ usuarios, setUsuarios,editingClient,setEditingClient,viewingClient,setViewingClient,clientSearchValue,setClientSearchValue,selectedUsers,setSelectedUsers}}>
-      <ToastContainer />
-        <Navbar/>
-        <Routes>
-          <Route path='/' element={<RegisterClient />}/>
-          <Route path='/clients' element={<Clients />}/>
-          <Route path='/clients-list' element={<ClientsList />}/>
-          <Route path='/clients-receipts' element={<ClientsReceipt/>}/>
-        </Routes>
-      </ClientsContext.Provider>
-
-    </BrowserRouter>
-  )
-}
+*/
 
 
 

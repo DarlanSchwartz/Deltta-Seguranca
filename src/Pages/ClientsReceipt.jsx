@@ -1,17 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import logo from '/logotipo.png';
+import { useLocation, useNavigate } from "react-router-dom";
 import logo2 from '/new-logo2.png';
 import { converterValorPorExtenso, obterMesAtualPorExtenso, obterAnoAtual } from "../utils";
 export default function ClientsReceipt() {
     const { usuarios } = useContext(ClientsContext);
     const navigate = useNavigate();
     const location = useLocation();
-
     const [showBackButton, setShowBackButton] = useState(false);
-    //{`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}
+
     useEffect(() => {
         setTimeout(() => {
             window.print();

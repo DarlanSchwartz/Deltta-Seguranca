@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import trashIcon from '/trash.png';
 import { useNavigate } from "react-router-dom";
+import { saveClients } from "../utils";
 
 export default function Clients() {
   const { usuarios, setUsuarios, clientSearchValue, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
@@ -22,19 +23,20 @@ export default function Clients() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let value = 0;
-    let value2 = 0;
-    usuarios.forEach(usuario => {
-      value += Number(usuario.valorCombinado);
+    if (usuarios !== null && usuarios !== undefined) {
+      let value = 0;
+      let value2 = 0;
+      usuarios.forEach(usuario => {
+        value += Number(usuario.valorCombinado);
 
-      if (usuario.vencimento == today) {
-        value2++;
-      }
-    });
+        if (usuario.vencimento == today) {
+          value2++;
+        }
+      });
 
-    setValorTotal(value.toFixed(2));
-
-    setVencemHoje(value2);
+      setValorTotal(value.toFixed(2));
+      setVencemHoje(value2);
+    }
   }, [usuarios]);
 
   useEffect(() => {
@@ -43,11 +45,13 @@ export default function Clients() {
 
   useEffect(() => {
 
-    if (checkAll) {
-      setSelectedUsers(usuarios.map(usuario => { return usuario.id }));
-    }
-    else {
-      setSelectedUsers([]);
+    if (usuarios !== null && usuarios !== undefined) {
+      if (checkAll) {
+        setSelectedUsers(usuarios.map(usuario => { return usuario.id }));
+      }
+      else {
+        setSelectedUsers([]);
+      }
     }
   }, [checkAll]);
 
@@ -170,49 +174,56 @@ export default function Clients() {
         });
 
         const newUsers = usuarios.filter(user => !selectedUsers.includes(user.id));
+        saveClients(newUsers);
         setUsuarios(newUsers);
         setCheckAll(false);
       }
     });
   }
 
-  function imprimirSelecionados()
-  {
-    navigate(`/clients-receipts`,{state:{ids:selectedUsers.map(user => user)}});
+  function imprimirSelecionados() {
+    navigate(`/clients-receipts`, { state: { ids: selectedUsers.map(user => user) } });
   }
 
   return (
     <PageContainer>
 
       <ClientsContainer className="clients-container">
-        <FilterDiv>
-          <div className="order-div">
-            <p>Ordenar por </p>
-            <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
-              <option value="nome">Nome</option>
-              <option value="valor">Valor Pago</option>
-              <option value="cidade">Cidade</option>
-              <option value="dia">Vencimento</option>
-            </select>
-            <RiListOrdered className="icon" />
-          </div>
-          <p>Quantidade de clientes: <span>{usuarios.length}</span></p>
-          <p>Média por cliente: <span>R$ {(valorTotal / usuarios.length).toFixed(2).replace('.', ',')}</span></p>
-          <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
-          <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
-        </FilterDiv>
+        {usuarios && usuarios.length > 0 && 
+        
+          <FilterDiv>
+            <div className="order-div">
+              <p>Ordenar por </p>
+              <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
+                <option value="nome">Nome</option>
+                <option value="valor">Valor Pago</option>
+                <option value="cidade">Cidade</option>
+                <option value="dia">Vencimento</option>
+              </select>
+              <RiListOrdered className="icon" />
+            </div>
+            <p>Quantidade de clientes: <span>{usuarios ? usuarios.length : 0}</span></p>
+            <p>Média por cliente: <span>R$ {usuarios && usuarios.length > 0 ? (valorTotal / usuarios.length).toFixed(2).replace('.', ',') : 0}</span></p>
+            <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
+            <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
+          </FilterDiv>
+        }
 
-        <IndicatorsDiv>
+        { usuarios && usuarios.length > 0 && 
+          <IndicatorsDiv>
           <p>Nome <BsPersonLinesFill className="icon" /></p>
           <p>Endereço <ImLocation className="icon" /></p>
           <p>Telefone <AiTwotonePhone className="icon" /></p>
           <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
         </IndicatorsDiv>
+        }
+
+        
         {selectedUsers.length > 0 && <div className="selection-actions">
           <button onClick={deleteSelected}><RiDeleteBin6Fill /> Excluir Selecionados</button>
           <button onClick={imprimirSelecionados}><RiPrinterFill /> Imprimir Selecionados</button>
         </div>}
-        {usuarios.length > 0 && usuarios.map((user) => {
+        {usuarios && usuarios.length > 0 && usuarios.map((user) => {
           let hide = false;
 
           if (user.nome.toLowerCase().includes(clientSearchValue.toLowerCase()) || user.id.toString() == clientSearchValue.toString()) {
@@ -223,6 +234,9 @@ export default function Clients() {
             <Client show={hide} user={user} key={user.id} checked={checkAll} />
           );
         })}
+
+        { usuarios == null || usuarios == undefined && <h1>Não há nenhum cliente cadastrado ainda!</h1>}
+        { usuarios !== null && usuarios !== undefined && usuarios.length == 0 && <h1 className="no-users-text">Não há nenhum cliente cadastrado ainda!</h1>}
       </ClientsContainer>
       <ViewClient />
 
@@ -327,6 +341,14 @@ const ClientsContainer = styled.div`
 
   justify-content: center;
   align-items: center;
+
+  .no-users-text{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 30px;
+  }
 
   .selection-actions{
     display: flex;

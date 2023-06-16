@@ -6,7 +6,7 @@ export default function ClientsList() {
     const { usuarios } = useContext(ClientsContext);
     const navigate = useNavigate();
 
-    const [showBackButton,setShowBackButton] = useState(false);
+    const [showBackButton, setShowBackButton] = useState(false);
 
     useEffect(() => {
         window.print();
@@ -15,7 +15,7 @@ export default function ClientsList() {
 
     return (
         <PageContainer>
-            { showBackButton && <button onClick={() => navigate('/clients')}>Voltar</button>}
+            {showBackButton && <button onClick={() => navigate('/clients')}>Voltar</button>}
             <ClientsContainer>
                 <ListHeader>
                     <p>Dia</p>
@@ -25,7 +25,7 @@ export default function ClientsList() {
                     <p>Valor</p>
                     <p></p>
                 </ListHeader>
-                {usuarios.map((usuario) => {
+                {usuarios && usuarios.map((usuario) => {
                     return (
                         <User key={usuario.id}>
                             <p>{usuario.vencimento}</p>
@@ -37,6 +37,7 @@ export default function ClientsList() {
                         </User>
                     );
                 })}
+                {!usuarios && <p>Não há nenhum cliente para imprimir!</p>}
             </ClientsContainer>
         </PageContainer>
     );

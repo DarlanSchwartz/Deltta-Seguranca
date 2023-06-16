@@ -5,28 +5,53 @@ import { MdGroups2, MdPersonSearch } from 'react-icons/md';
 import { useContext, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { RiPrinterFill } from 'react-icons/ri';
-
-// 
-
+import logo from '/new-logo2.png';
+import Swal from "sweetalert2";
 
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { editingClient, setEditingClient, usuarios, setUsuarios, setClientSearchValue } = useContext(ClientsContext);
+    const { editingClient, setEditingClient, setClientSearchValue, usuarios } = useContext(ClientsContext);
     const [showSearchIcon, setShowSeachIcon] = useState(true);
     const [searchValue, setSearchValue] = useState('');
 
 
     function updateSearch(word) {
         setSearchValue(word);
-        setClientSearchValue(word);
+
+        if (usuarios !== null && usuarios !== undefined) {
+            setClientSearchValue(word);
+        }
+    }
+
+    function printClientsList() {
+        if (usuarios !== null && usuarios !== undefined) {
+            navigate('/clients-list');
+            setEditingClient(null);
+        }
+        else {
+            Swal.fire({
+                title: `<span style="font-family: 'Mulish', sans-serif;font-size: 14px">Ainda não há nenhum cliente!</span>`,
+                showCancelButton: false,
+                confirmButtonColor: '#07bc0c',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'Cancelar',
+                width: 280,
+                heightAuto: false,
+                imageWidth: 100,
+                imageHeight: 100,
+            });
+        }
     }
 
     return (
         <>
             {location.pathname != '/clients-list' && location.pathname != '/clients-receipts' &&
                 <Header>
-                    {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+                    <div className="logo-container">
+                        <img className="logo" src={logo} alt="logo" onClick={()=> navigate('/clients')} />
+                        {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+                    </div>
                     {location.pathname !== '/' &&
                         <SearchBar>
                             <div className="input-container">
@@ -37,7 +62,7 @@ export default function Navbar() {
                     <Actions>
                         <button onClick={() => { navigate('/clients'); setEditingClient(null); }}><MdGroups2 className="icon-group" />Clientes</button>
                         <button onClick={() => navigate('/')}><BsPersonFillAdd className="icon-add" /> Cadastrar cliente</button>
-                        <RiPrinterFill onClick={() => { navigate('/clients-list'); setEditingClient(null); }} className="print-clients" />
+                        <RiPrinterFill onClick={printClientsList} className="print-clients" />
                     </Actions>
                 </Header>
             }
@@ -60,6 +85,18 @@ const Header = styled.nav`
   justify-content: space-between;
   padding-left: 30px;
   z-index: 2;
+
+  .logo-container{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo{
+    height: 70%;
+    cursor: pointer;
+  }
 
   h1{
     font-size: 40px;

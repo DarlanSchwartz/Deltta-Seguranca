@@ -14,7 +14,7 @@ export default function ClientsReceipt() {
     //{`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}
     useEffect(() => {
         setTimeout(() => {
-           //    window.print();
+            window.print();
             setShowBackButton(true);
         }, 1000);
     }, []);

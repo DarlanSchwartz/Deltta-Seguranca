@@ -19,13 +19,13 @@ export default function Navbar() {
     function updateSearch(word) {
         setSearchValue(word);
 
-        if (usuarios !== null && usuarios !== undefined) {
+        if (usuarios !== null && usuarios !== undefined && usuarios.length > 0) {
             setClientSearchValue(word);
         }
     }
 
     function printClientsList() {
-        if (usuarios !== null && usuarios !== undefined) {
+        if (usuarios !== null && usuarios !== undefined && usuarios.length > 0) {
             navigate('/clients-list');
             setEditingClient(null);
         }

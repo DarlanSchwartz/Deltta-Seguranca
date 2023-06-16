@@ -111,14 +111,14 @@ const ClientsContainer = styled.div`
     flex-wrap: wrap;
     margin-top: 20px;
     background-color: white;
-    gap: 3px;
+    gap: 2px;
     max-width: 840px;
     
 
 `;
 
 const ReceiptContainer = styled.div`
-    width: 385px;
+    width: 370px;
     height: 500px;
     background-color: white;
     border: 2px solid black;
@@ -135,11 +135,11 @@ const ReceiptContainer = styled.div`
 
     &:nth-child(4n+5) {
     
-        margin-top: 300px;
+        margin-top: 120px;
     }
 
     &:nth-child(4n+6){
-        margin-top: 300px;
+        margin-top: 120px;
     }
 
     .logo{

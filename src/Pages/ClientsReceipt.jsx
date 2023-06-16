@@ -14,7 +14,7 @@ export default function ClientsReceipt() {
     //{`${usuario.rua}, ${usuario.numero} - ${usuario.bairro} - ${usuario.cidade}`}
     useEffect(() => {
         setTimeout(() => {
-            window.print();
+           //    window.print();
             setShowBackButton(true);
         }, 1000);
     }, []);
@@ -29,6 +29,7 @@ export default function ClientsReceipt() {
                             {location.state.ids.includes(usuario.id) &&
 
                                 <ReceiptContainer key={usuario.id}>
+                                    <img className="background-logo" src={logo2}/>
                                     <div className="logo">
                                         <div className="content">
                                             <img src={logo2} alt="" />
@@ -117,10 +118,20 @@ const ClientsContainer = styled.div`
 `;
 
 const ReceiptContainer = styled.div`
-    width: 390px;
+    width: 385px;
     height: 500px;
     background-color: white;
     border: 2px solid black;
+    position: relative;
+
+    .background-logo{
+        width: 100%;
+        position: absolute;
+        opacity: 15%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }
 
     &:nth-child(4n+5) {
     
@@ -144,9 +155,9 @@ const ReceiptContainer = styled.div`
             display: flex;
             align-items: center;
             gap: 20px;
-            height: 100%;
+            height: 80%;
             img{
-                height: 80%;
+                height: 100%;
             }
 
             p{

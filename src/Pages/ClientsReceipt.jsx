@@ -3,6 +3,7 @@ import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import logo from '/logotipo.png';
+import logo2 from '/new-logo2.png';
 import { converterValorPorExtenso, obterMesAtualPorExtenso, obterAnoAtual } from "../utils";
 export default function ClientsReceipt() {
     const { usuarios } = useContext(ClientsContext);
@@ -30,7 +31,7 @@ export default function ClientsReceipt() {
                                 <ReceiptContainer key={usuario.id}>
                                     <div className="logo">
                                         <div className="content">
-                                            <img src={logo} alt="" />
+                                            <img src={logo2} alt="" />
                                             <div className="main-info">
                                                 <p>Fone: (51) 99607-8532</p>
                                                 <p>email: segurancadeltta@gmail.com</p>

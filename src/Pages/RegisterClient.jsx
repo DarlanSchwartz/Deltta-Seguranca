@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
-import { formatarTelefone ,formatValorCombinado,saveClients,saveClientsTextFile } from "../utils";
+import { formatarTelefone ,formatValorCombinado,saveClients} from "../utils";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
@@ -88,7 +88,7 @@ export default function RegisterClient() {
             return;
         }
 
-        let id = 0;
+        let id = 1;
 
        if(editingClient == null)
        {
@@ -100,7 +100,8 @@ export default function RegisterClient() {
                 });
 
                 do {
-                    id = Math.floor(Math.random() * 1001);
+                    id = Math.floor(Math.random() * 999) + 1;
+                    console.log(id);
                 } while (clientIds.includes(id));
             }
 

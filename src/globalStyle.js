@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
         background:url(${logo});
         background-repeat: repeat;
         background-size: 400px ;
-        background-color: #ffffffcf;
+        background-color: #313338;
     }
 
     #root{

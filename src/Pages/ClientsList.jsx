@@ -164,7 +164,8 @@ const PageContainer = styled.div`
     align-items: center;
 
     button{
-        background-color: #07bc0c;
+        color: white;
+        background-color: #1f1f1f;
         border-radius: 50px;
         height: 40px;
         border: 1px solid white;
@@ -178,9 +179,9 @@ const PageContainer = styled.div`
 
 
         &:hover{
-            color: #07bc0c;
+            color: #1f1f1f;
             background-color: white;
-            border: 1px solid #07bc0c;
+            border: 1px solid #1f1f1f;
         }
 }
 

@@ -233,7 +233,7 @@ const StyledForm = styled.form`
   gap: 10px;
   margin-top: 100px;
   flex-shrink: 0;
-  background-color: rgba(255, 255, 255, 0.726);
+  background-color: rgba(48, 45, 45, 0.726);
 
   .adress-labels-elements-container{
     display: flex;
@@ -273,7 +273,7 @@ const StyledForm = styled.form`
   }
 
   label{
-    color: #020202;
+    color: white;
     align-self: self-start;
     margin-left: 20px;
   }
@@ -286,7 +286,7 @@ const StyledForm = styled.form`
     padding-left: 10px;
     padding-top: 5px;
     &:focus{
-      outline: 2px solid #07bc0c;
+      outline: 2px solid #ddd815;
     }
   }
 
@@ -297,7 +297,7 @@ const StyledForm = styled.form`
     width: 95%;
     padding-left: 10px;
     &:focus{
-      outline: 2px solid #07bc0c;
+      outline: 2px solid #ddd815;
     }
   }
 
@@ -371,7 +371,7 @@ const StyledForm = styled.form`
     cursor: pointer;
     &:focus
     {
-        outline: 2px solid #07bc0c;
+        outline: 2px solid #ddd815;
     }
   }
 
@@ -381,8 +381,8 @@ const StyledForm = styled.form`
 
   button{
     border: 0;
-    background-color: #07bc0c;
-    color: white;
+    background-color: #ddd815;
+    color: black;
     cursor: pointer;
     height: 40px;
     width: 95%;
@@ -392,16 +392,16 @@ const StyledForm = styled.form`
    
     &:hover{
       &:enabled{
-        color: #07bc0c;
-      border: 1px solid #07bc0c;
-      background-color: white;
+        color: white;
+      border: 1px solid #ddd815;
+      background-color: #313338;
       }
     }
 
     &:disabled{
       cursor: not-allowed;
-      background-color: #40884081;
-      color: #ffffff76;
+      background-color: #ddd815;
+      color: #44404076;
     }
 }
 

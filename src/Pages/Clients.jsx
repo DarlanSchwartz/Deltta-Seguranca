@@ -149,10 +149,10 @@ export default function Clients() {
 
   function deleteSelected() {
     Swal.fire({
-      title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover estes ${selectedUsers.length} cliente(s)?</span>`,
+      title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px;color:white">Remover estes ${selectedUsers.length} cliente(s)?</span>`,
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#07bc0c',
+      cancelButtonColor: '#ddd815',
       confirmButtonText: 'Remover',
       cancelButtonText: 'Cancelar',
       width: 300,
@@ -160,6 +160,7 @@ export default function Clients() {
       imageUrl: trashIcon,
       imageWidth: 100,
       imageHeight: 100,
+      background:'#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
         toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
@@ -204,7 +205,7 @@ export default function Clients() {
             </div>
             <p>Quantidade de clientes: <span>{usuarios ? usuarios.length : 0}</span></p>
             <p>Média por cliente: <span>R$ {usuarios && usuarios.length > 0 ? (valorTotal / usuarios.length).toFixed(2).replace('.', ',') : 0}</span></p>
-            <p>Valor total: <span>R$ {valorTotal.toString().replace('.', ',')}</span></p>
+            <p>Valor total: <span className="price" >R$ {valorTotal.toString().replace('.', ',')}</span></p>
             <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
           </FilterDiv>
         }
@@ -246,9 +247,9 @@ export default function Clients() {
 
 const FilterDiv = styled.div`
 
-    background-color: #ffffff;
+    background-color: #202122;
     border-radius: 5px;
-    color: #5e5e5e;
+    color: white;
     width: 100%;
     max-width: 1174px;
     margin-left: 48px;
@@ -257,7 +258,7 @@ const FilterDiv = styled.div`
     align-items: center;
     padding-left: 10px;
     padding-right: 11px;
-    border: 2px solid #07bc0c;
+    border: 2px solid #ddd815;
     gap: 20px;
     justify-content: space-between;
 
@@ -267,6 +268,7 @@ const FilterDiv = styled.div`
         gap: 10px;
         position: relative;
         align-items: center;
+        
 
         select{
             appearance: none;
@@ -276,13 +278,15 @@ const FilterDiv = styled.div`
             height: 30px;
             cursor: pointer;
             width: 100px;
-            margin-top: 5px;
+            margin-top: 4px;
+            color: white;
+            background-color: #202122;
         }
 
         .icon{
             position: absolute;
-            right: 3px;
-            top: 12px;
+            right: 4px;
+            top: 11px;
             pointer-events: none;
         }
     }
@@ -308,11 +312,14 @@ const FilterDiv = styled.div`
     }
 
    P{
-        font-size:18px;    
+        font-size:18px;
+        .price{
+          color: #07bc0c;
+        }
     
         span
         {
-            color: #07bc0c;
+            color: #ddd815;
             font-weight: bold;
         }
         &:nth-child(1)
@@ -348,6 +355,7 @@ const ClientsContainer = styled.div`
     left: 50%;
     transform: translate(-50%,-50%);
     font-size: 30px;
+    color: white;
   }
 
   .selection-actions{
@@ -362,11 +370,17 @@ const ClientsContainer = styled.div`
     button{
       padding: 10px 10px 10px 10px;
       border-radius: 20px;
-      border: 0;
+      border: 1px solid rgba(0,0,0,0);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
+      color: white;
+      background-color: #202122;
+
+      &:hover{
+        border: 1px solid #ddd815;
+      }
     }
   }
 `;
@@ -380,9 +394,9 @@ const PageContainer = styled.div`
 
 const IndicatorsDiv = styled.div`
 
-    background-color: #ffffff;
+    background-color: #202122;
     border-radius: 5px;
-    color: #5e5e5e;
+    color: white;
     width: 100%;
     max-width: 1172px;
     margin-left: 48px;

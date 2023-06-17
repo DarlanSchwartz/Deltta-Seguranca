@@ -46,10 +46,10 @@ export default function Client(props) {
   function deleteThis(e) {
     e.stopPropagation();
     Swal.fire({
-      title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover ${nome}?</span>`,
+      title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px; color:white">Remover ${nome}?</span>`,
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#07bc0c',
+      cancelButtonColor: '#ddd815',
       confirmButtonText: 'Remover',
       cancelButtonText: 'Cancelar',
       width: 300,
@@ -57,6 +57,7 @@ export default function Client(props) {
       imageUrl: trashIcon,
       imageWidth: 100,
       imageHeight: 100,
+      background:'#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
         toast.error(`${user.nome} foi removido da lista`, {
@@ -100,9 +101,9 @@ export default function Client(props) {
 
 const ClientDiv = styled.div`
   
-    background-color: #ffffff;
+    background-color: #202122;
     border-radius: 5px;
-    color: #5e5e5e;
+    color: white;
     width: 100%;
     max-width: 1100px;
     display: ${(props) => props.show == 'true' ? 'flex' : 'none'};
@@ -123,14 +124,14 @@ const ClientDiv = styled.div`
     
 
     &:hover{
-      border: 2px solid black;
+      border: 2px solid #ddd815;
     }
 
 
     p:nth-child(1)
     {
       width: 300px;
-      color: ${(props) => props.expires_today == 'true' ? 'red' : 'black'};
+      color: ${(props) => props.expires_today == 'true' ? 'red' : 'white'};
       font-weight: ${(props) => props.expires_today == 'true' ? 'bold' : 'normal'};
     }
 
@@ -152,7 +153,7 @@ const ClientDiv = styled.div`
       position: relative;
 
       .edit-icon,.delete-icon{
-        color: #07bc0c;
+        color: #ddd815;
         cursor: pointer;
         font-size: 22px;
         flex-shrink: 0;
@@ -169,7 +170,7 @@ const ClientDiv = styled.div`
       .checkbox{
           position: absolute;
           right: -60px;
-          background-color: white;
+          background-color: #202122;
           display: flex;
           align-items: center;
           justify-content: center;

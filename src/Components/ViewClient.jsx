@@ -24,10 +24,10 @@ export default function ViewClient() {
     function deleteThis(e) {
         e.stopPropagation();
         Swal.fire({
-            title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px">Remover ${viewingClient.nome}?</span>`,
+            title: `<span style="font-family: 'Mulish', sans-serif;font-size: 20px;color:white">Remover ${viewingClient.nome}?</span>`,
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            cancelButtonColor: '#07bc0c',
+            cancelButtonColor: '#ddd815',
             confirmButtonText: 'Remover',
             cancelButtonText: 'Cancelar',
             width: 300,
@@ -35,6 +35,7 @@ export default function ViewClient() {
             imageUrl: trashIcon,
             imageWidth: 100,
             imageHeight: 100,
+            background:'#1f1f1f'
         }).then((result) => {
             if (result.isConfirmed) {
                 const newUsers = usuarios.filter(fuser => fuser.id != viewingClient.id);
@@ -80,13 +81,14 @@ export default function ViewClient() {
 
 const ViewClientDiv = styled.div`
     max-width: 600px;
+    color: white;
     max-height: 600px;
     min-width: 450px;
     position: fixed;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-55%);
-    background-color: white;
+    background-color: #202122;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -112,7 +114,9 @@ const ViewClientDiv = styled.div`
     }
 
     button{
-        border: 0;
+        color:black;
+            border: 1px solid #202122;
+            background-color: white;
         width: 140px;
         position: absolute;
         right: 10px;
@@ -126,6 +130,14 @@ const ViewClientDiv = styled.div`
         align-items: center;
         justify-content: center;
         gap: 5px;
+        transition: all 200ms;
+        &:hover{
+            
+
+            border: 1px solid white;
+        background-color: #202122;
+        color: white;
+        }
     }
 
     .actions{
@@ -144,7 +156,7 @@ const ViewClientDiv = styled.div`
         }
 
         .edit-btn{
-            color: #07bc0c;
+            color: #ddd815;
         }
         .delete-btn{
             color: red;

@@ -31,15 +31,16 @@ export default function Navbar() {
         }
         else {
             Swal.fire({
-                title: `<span style="font-family: 'Mulish', sans-serif;font-size: 14px">Ainda não há nenhum cliente!</span>`,
+                title: `<span style="font-family: 'Mulish', sans-serif;font-size: 14px; color:white">Ainda não há nenhum cliente!</span>`,
                 showCancelButton: false,
-                confirmButtonColor: '#07bc0c',
+                confirmButtonColor: '#1f1f1f',
                 confirmButtonText: 'Ok',
                 cancelButtonText: 'Cancelar',
                 width: 280,
                 heightAuto: false,
                 imageWidth: 100,
                 imageHeight: 100,
+                background: '#313338'
             });
         }
     }
@@ -75,11 +76,11 @@ const Header = styled.nav`
   position: fixed;
   top: 0px;
   
-  background-color: white;
+  background-color: #202122;
   width: 100%;
   height: 100px;
   
-  border-bottom: 1px solid #07bc0c;
+  border-bottom: 1px solid #ddd815;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -100,7 +101,7 @@ const Header = styled.nav`
 
   h1{
     font-size: 40px;
-    color: #07bc0c;
+    color: #ddd815;
     flex-shrink: 0;
   }
 
@@ -124,7 +125,7 @@ const SearchBar = styled.div`
         align-items: center;
 
         .search-icon{
-            color: #8ceb8f;
+            color: #ddd815;
             font-size: 20px;
             position: absolute;
             right: 20px;
@@ -140,7 +141,7 @@ const SearchBar = styled.div`
             height: 40px;
             width: 100%;
             border-radius: 20px;
-            border: 1px solid #07bc0c;
+            border: 1px solid #ddd815;
             padding-left: 20px;
             min-width: 120px;
             margin-right: 10px;
@@ -162,19 +163,20 @@ width: 100%;
 
 .print-clients{
     font-size: 40px;
-    color:  #07bc0c;
+    color:  #ddd815;
     cursor: pointer;
     &:hover{
-        color: #67e26b;
+        color: #979313;
     }
 }
 
 button{
     border: 0;
-    background-color: white;
+    color: white;
+    background-color: #313338;
     border-radius: 20px;
     height: 40px;
-    border: 1px solid #07bc0c;
+    border: 1px solid #ddd815;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
@@ -186,22 +188,22 @@ button{
 
     .icon-group{
         font-size: 25px;
-        color: #07bc0c;
+        color: #ddd815;
         transition: all 200ms;
     }
 
     .icon-add{
         font-size: 20px;
-        color: #07bc0c;
+        color: #ddd815;
         transition: all 200ms;
     }
 
     &:hover{
-        color: white;
-        background-color: #07bc0c;
+        color: #313338;
+        background-color: #ddd815;
 
         .icon-add,.icon-group{
-            color: white;
+            color: #313338;
         }
     }
 }

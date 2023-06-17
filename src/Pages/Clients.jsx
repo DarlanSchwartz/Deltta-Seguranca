@@ -96,9 +96,9 @@ export default function Clients() {
       const users = [...usuarios];
 
       users.sort((a, b) => {
-        if (a.vencimento < b.vencimento) {
+        if (Number(a.vencimento) < Number(b.vencimento)) {
           return -1;
-        } else if (a.vencimento > b.vencimento) {
+        } else if (Number(a.vencimento) > Number(b.vencimento)) {
           return 1;
         } else {
           return 0;

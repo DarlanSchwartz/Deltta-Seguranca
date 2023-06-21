@@ -2,9 +2,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import logo2 from '/new-logo2.png';
+
 export default function ClientsList() {
     const { usuarios } = useContext(ClientsContext);
     const navigate = useNavigate();
+    const amountOfBacks = Math.ceil(usuarios.length / 33);
+
+    const backs = Array.from({ length: amountOfBacks }, (_, index) => (
+        <img key={index} src={logo2} className="back" alt="" />
+      ));
 
     const [showBackButton, setShowBackButton] = useState(false);
 
@@ -15,8 +22,12 @@ export default function ClientsList() {
 
     return (
         <PageContainer>
+            <div className="back-container">
+                {backs}
+            </div>
             {showBackButton && <button onClick={() => navigate('/clients')}>Voltar</button>}
             <ClientsContainer>
+            
                 <ListHeader>
                     <p>Dia</p>
                     <p>ID</p>
@@ -101,6 +112,12 @@ const User = styled.div`
     justify-content: flex-start;
     width: 100%;
     overflow: hidden;
+    &:nth-child(34n+35) {
+    
+        margin-top: 70px;
+        border-top: 1px solid black;
+    }
+
     p{
         line-height: 30px;
         font-size: 13px;
@@ -111,6 +128,8 @@ const User = styled.div`
         overflow: hidden;
         display: inline;
         white-space: nowrap;
+
+       
 
         &:nth-child(1)
         {
@@ -155,7 +174,7 @@ const User = styled.div`
 
 const PageContainer = styled.div`
 
-    height: 100%;
+    
     width: 100%;
     background-color: white;
     display: flex;
@@ -185,6 +204,25 @@ const PageContainer = styled.div`
         }
 }
 
+.back-container{
+    margin-top: 300px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    gap: 400px;
+
+    .back{
+        width: 100%;
+        max-width: 700px;
+        opacity: 15%;
+    }
+}
+
 `;
 
 const ClientsContainer = styled.div`
@@ -193,5 +231,5 @@ const ClientsContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     margin-top: 20px;
-
+    z-index: 1;
 `;

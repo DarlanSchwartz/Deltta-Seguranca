@@ -173,8 +173,6 @@ const User = styled.div`
 `;
 
 const PageContainer = styled.div`
-
-    
     width: 100%;
     background-color: white;
     display: flex;
@@ -205,7 +203,7 @@ const PageContainer = styled.div`
 }
 
 .back-container{
-    margin-top: 300px;
+    padding-top: 300px;
     background-color: white;
     display: flex;
     justify-content: center;

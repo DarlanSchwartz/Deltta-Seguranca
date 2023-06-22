@@ -112,15 +112,15 @@ const User = styled.div`
     justify-content: flex-start;
     width: 100%;
     overflow: hidden;
-    &:nth-child(34n+35) {
+    &:nth-child(40n+41) {
     
-        margin-top: 70px;
+        margin-top: 100px;
         border-top: 1px solid black;
     }
 
     p{
-        line-height: 30px;
-        font-size: 13px;
+        line-height: 25px;
+        font-size: 11px;
         border-bottom: 1px solid black;
         border-right: 1px solid black;
         padding-left: 5px;

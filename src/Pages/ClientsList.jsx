@@ -7,7 +7,7 @@ import logo2 from '/new-logo2.png';
 export default function ClientsList() {
     const { usuarios } = useContext(ClientsContext);
     const navigate = useNavigate();
-    const amountOfBacks = Math.ceil(usuarios.length / 33);
+    const amountOfBacks = Math.ceil(usuarios.length / 39);
 
     const backs = Array.from({ length: amountOfBacks }, (_, index) => (
         <img key={index} src={logo2} className="back" alt="" />
@@ -112,7 +112,7 @@ const User = styled.div`
     justify-content: flex-start;
     width: 100%;
     overflow: hidden;
-    &:nth-child(40n+41) {
+    &:nth-child(39n+40) {
     
         margin-top: 100px;
         border-top: 1px solid black;

@@ -114,7 +114,7 @@ function loadClientsFromCookies()
 
 // SAVE CLIENT TEXT FILE BACKUP
 
-export function saveClientsTextFile(clients, fileName = "clients.txt") {
+export function saveClientsTextFile(clients, fileName = "backup-clients.txt") {
     const data = JSON.stringify(clients, null, 2);
     var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
     FileSaver.saveAs(blob, fileName);

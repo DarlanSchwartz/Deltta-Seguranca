@@ -1,18 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { BsPersonFillAdd } from 'react-icons/bs';
 import { MdGroups2, MdPersonSearch } from 'react-icons/md';
 import { useContext, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { RiPrinterFill } from 'react-icons/ri';
+import { BsPersonFillAdd,BsThreeDotsVertical ,BsFiletypeTxt} from 'react-icons/bs';
+import {FaReceipt} from 'react-icons/fa';
 import logo from '/new-logo2.png';
 import Swal from "sweetalert2";
+import { saveClientsTextFile } from "../utils";
 
 export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const { editingClient, setEditingClient, setClientSearchValue, usuarios } = useContext(ClientsContext);
     const [showSearchIcon, setShowSeachIcon] = useState(true);
+    const [showDotsDropdown, setShowDotsDropdown] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
 
@@ -24,7 +27,14 @@ export default function Navbar() {
         }
     }
 
-    function printClientsList() {
+    function printReceipts(e) {
+        e.stopPropagation();
+        navigate(`/clients-receipts`, { state: { ids: usuarios.map(user => user.id) } });
+    }
+
+    function printClientsList(e) {
+        e.stopPropagation();
+
         if (usuarios !== null && usuarios !== undefined && usuarios.length > 0) {
             navigate('/clients-list');
             setEditingClient(null);
@@ -49,27 +59,66 @@ export default function Navbar() {
         <>
             {location.pathname != '/clients-list' && location.pathname != '/clients-receipts' &&
                 <Header>
-                    <div className="logo-container">
+                    <div className="logo-container" onClick={()=>setShowDotsDropdown(false)}>
                         <img className="logo" src={logo} alt="logo" onClick={()=> navigate('/clients')} />
                         {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
                     </div>
                     {location.pathname !== '/' &&
-                        <SearchBar>
-                            <div className="input-container">
-                                <input value={searchValue} onChange={(e) => updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={() => setShowSeachIcon(false)} onBlur={() => setShowSeachIcon(true)} />
+                        <SearchBar  onClick={()=>setShowDotsDropdown(false)}>
+                            <div className="input-container" onClick={()=>setShowDotsDropdown(false)}>
+                                <input value={searchValue} onChange={(e) => updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={() => {setShowSeachIcon(false); setShowDotsDropdown(false)}} onBlur={() => setShowSeachIcon(true)} />
                                 <MdPersonSearch className={`search-icon ${!showSearchIcon ? 'hide' : ''}`} />
                             </div>
                         </SearchBar>}
                     <Actions>
-                        <button onClick={() => { navigate('/clients'); setEditingClient(null); }}><MdGroups2 className="icon-group" />Clientes</button>
-                        <button onClick={() => navigate('/')}><BsPersonFillAdd className="icon-add" /> Cadastrar cliente</button>
-                        <RiPrinterFill onClick={printClientsList} className="print-clients" />
+                        <button onClick={() => { navigate('/clients'); setEditingClient(null);setShowDotsDropdown(false)}}><MdGroups2 className="icon-group" />Clientes</button>
+                        <button onClick={() => {navigate('/'); setShowDotsDropdown(false)}}><BsPersonFillAdd className="icon-add" /> Cadastrar cliente</button>
+                        <BsThreeDotsVertical onClick={()=>setShowDotsDropdown(!showDotsDropdown)} className="three-dots" />
+                        {showDotsDropdown && 
+                        <OptionsDropdown onBlur={()=>setShowDotsDropdown(false)}>
+                            <button className="print" onClick={printClientsList}><RiPrinterFill/>Lista de clientes</button>
+                            <button className="print" onClick={printReceipts}><FaReceipt/>Recibo dos clientes</button>
+                            <button className="print" onClick={(e)=> {saveClientsTextFile(usuarios); e.stopPropagation();}}><BsFiletypeTxt/>Backup.txt</button>
+                        </OptionsDropdown>}
                     </Actions>
                 </Header>
             }
         </>
     );
 }
+
+const OptionsDropdown = styled.div`
+
+    width: 200px;
+    height: auto;
+    position: fixed;
+    top: 100px;
+    right: 0;
+    background-color: #202122;
+    border-bottom: 1px solid #ddd815;
+    border-left: 1px solid #ddd815;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    border-bottom-left-radius: 10px;
+
+    .print{
+        width: 200px;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        justify-content: center;
+        max-width: 100%;
+        
+    }
+
+`;
 
 const Header = styled.nav`
 
@@ -161,8 +210,9 @@ gap: 10px;
 max-width: 340px;
 width: 100%;
 
-.print-clients{
-    font-size: 40px;
+.three-dots{
+    font-size: 35px;
+    padding-top: 5px;
     color:  #ddd815;
     cursor: pointer;
     &:hover{

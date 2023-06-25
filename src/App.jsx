@@ -22,6 +22,8 @@ export default function App() {
     setUsuarios(loadClients());
   },[]);
 
+  // Lista nova de clientes com todas infos -> Nome cliente, numero telefone, endereço
+
 
   return (
     <BrowserRouter>

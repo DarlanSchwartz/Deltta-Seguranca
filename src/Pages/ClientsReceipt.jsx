@@ -24,7 +24,7 @@ export default function ClientsReceipt() {
                 {usuarios.map((usuario) => {
                     return (
                         <>
-                            {location.state.ids.includes(usuario.id) &&
+                            {location.state.ids.includes(usuario.id) && usuario.formadepagamento != 'Boleto' &&
 
                                 <ReceiptContainer key={usuario.id}>
                                     <img className="background-logo" src={logo2}/>

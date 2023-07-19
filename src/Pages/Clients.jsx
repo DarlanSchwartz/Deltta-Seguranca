@@ -12,6 +12,10 @@ import { toast } from 'react-toastify';
 import trashIcon from '/trash.png';
 import { useNavigate } from "react-router-dom";
 import { saveClients } from "../utils";
+import { useWindowSize } from "@uidotdev/usehooks";
+import {BiTimeFive,BiMoneyWithdraw} from 'react-icons/bi';
+import {GiReceiveMoney} from 'react-icons/gi';
+import { MdGroups2 } from 'react-icons/md';
 
 export default function Clients() {
   const { usuarios, setUsuarios, clientSearchValue, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
@@ -21,6 +25,7 @@ export default function Clients() {
   const orderSelect = useRef(null);
   const today = new Date().getDate();
   const navigate = useNavigate();
+   const size = useWindowSize();
 
   useEffect(() => {
     if (usuarios !== null && usuarios !== undefined) {
@@ -160,7 +165,7 @@ export default function Clients() {
       imageUrl: trashIcon,
       imageWidth: 100,
       imageHeight: 100,
-      background:'#1f1f1f'
+      background: '#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
         toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
@@ -190,11 +195,11 @@ export default function Clients() {
     <PageContainer>
 
       <ClientsContainer className="clients-container">
-        {usuarios && usuarios.length > 0 && 
-        
+        {usuarios && usuarios.length > 0 &&
+
           <FilterDiv>
             <div className="order-div">
-              <p>Ordenar por </p>
+              {size.width > 1055 && <p>Ordenar por </p>}
               <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
                 <option value="nome">Nome</option>
                 <option value="valor">Valor Pago</option>
@@ -203,23 +208,31 @@ export default function Clients() {
               </select>
               <RiListOrdered className="icon" />
             </div>
-            <p>Quantidade de clientes: <span>{usuarios ? usuarios.length : 0}</span></p>
-            <p>Média por cliente: <span>R$ {usuarios && usuarios.length > 0 ? (valorTotal / usuarios.length).toFixed(2).replace('.', ',') : 0}</span></p>
-            <p>Valor total: <span className="price" >R$ {valorTotal.toString().replace('.', ',')}</span></p>
-            <p>Vence hoje: <span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
+            <p>{size.width > 1055 ? 'Quantidade de clientes: ' : <MdGroups2/>}<span>{usuarios ? usuarios.length : 0}</span></p>
+            <p>{size.width > 1055 ? 'Média por cliente: ' : <GiReceiveMoney/>} <span>{size.width > 1055 ? 'R$ ' : ''}{usuarios && usuarios.length > 0 ? (valorTotal / usuarios.length).toFixed(2).replace('.', ',') : 0}</span></p>
+            <p>{size.width > 1055 ? 'Valor total: ' :  <BiMoneyWithdraw/>} <span className="price" >{size.width > 1055 ? 'R$ ' : ''}{valorTotal.toString().replace('.', ',')}</span></p>
+            <p>{size.width > 1055 ? 'Vence hoje: ' : <BiTimeFive/>}<span>{vencemHoje} {vencemHoje > 0 && 'pessoa(s)'}</span></p>
           </FilterDiv>
         }
 
-        { usuarios && usuarios.length > 0 && 
+        {usuarios && usuarios.length > 0 &&
           <IndicatorsDiv>
-          <p>Nome <BsPersonLinesFill className="icon" /></p>
-          <p>Endereço <ImLocation className="icon" /></p>
-          <p>Telefone <AiTwotonePhone className="icon" /></p>
-          <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
-        </IndicatorsDiv>
+            {
+              size.width > 720 ?
+              <>
+                <p>Nome <BsPersonLinesFill className="icon" /></p>
+                <p>Endereço <ImLocation className="icon" /></p>
+                <p>Telefone <AiTwotonePhone className="icon" /></p>
+                <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
+              </> :
+               <input type="checkbox2" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
+            }
+            
+           
+          </IndicatorsDiv>
         }
 
-        
+
         {selectedUsers.length > 0 && <div className="selection-actions">
           <button onClick={deleteSelected}><RiDeleteBin6Fill /> Excluir Selecionados</button>
           <button onClick={imprimirSelecionados}><RiPrinterFill /> Imprimir Selecionados</button>
@@ -235,9 +248,7 @@ export default function Clients() {
             <Client show={hide} user={user} key={user.id} checked={checkAll} />
           );
         })}
-
-        { usuarios == null || usuarios == undefined && <h1>Não há nenhum cliente cadastrado ainda!</h1>}
-        { usuarios !== null && usuarios !== undefined && usuarios.length == 0 && <h1 className="no-users-text">Não há nenhum cliente cadastrado ainda!</h1>}
+        {usuarios !== null && usuarios !== undefined && usuarios.length == 0 && <h1 className="no-users-text">Não há nenhum cliente cadastrado ainda!</h1>}
       </ClientsContainer>
       <ViewClient />
 
@@ -252,7 +263,6 @@ const FilterDiv = styled.div`
     color: white;
     width: 100%;
     max-width: 1174px;
-    margin-left: 48px;
     display: flex;
     height: 80px;
     align-items: center;
@@ -261,6 +271,16 @@ const FilterDiv = styled.div`
     border: 2px solid #ddd815;
     gap: 20px;
     justify-content: space-between;
+    @media(max-width:536px)
+    {
+      gap: 3px;
+    }
+
+    @media(max-width: 888px)
+    {
+      border: 0;
+      border-radius: 0;
+    }
 
     
     .order-div{
@@ -268,6 +288,7 @@ const FilterDiv = styled.div`
         gap: 10px;
         position: relative;
         align-items: center;
+       
         
 
         select{
@@ -281,6 +302,11 @@ const FilterDiv = styled.div`
             margin-top: 4px;
             color: white;
             background-color: #202122;
+            @media(max-width:536px)
+            {
+              width: 80px;
+              font-size: 13px;
+            }
         }
 
         .icon{
@@ -313,6 +339,10 @@ const FilterDiv = styled.div`
 
    P{
         font-size:18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
         .price{
           color: #07bc0c;
         }
@@ -333,6 +363,11 @@ const FilterDiv = styled.div`
             span {
                 color: red;
             }
+        }
+
+        @media(max-width:536px)
+        {
+          font-size:18px;
         }
    }
 
@@ -356,16 +391,22 @@ const ClientsContainer = styled.div`
     transform: translate(-50%,-50%);
     font-size: 30px;
     color: white;
+    width: 100%;
+    text-align: center;
+    @media (max-width:400px) 
+    {
+      transition: all 200ms;
+       font-size: 15px;
+    }
   }
 
   .selection-actions{
     display: flex;
     gap: 20px;
     width: 100%;
-    max-width: 1220px;
+    max-width: 1174px;
     justify-content: flex-end;
     align-items: center;
-    padding-left: 40px;
 
     button{
       padding: 10px 10px 10px 10px;
@@ -399,12 +440,25 @@ const IndicatorsDiv = styled.div`
     color: white;
     width: 100%;
     max-width: 1172px;
-    margin-left: 48px;
     display: flex;
     height: 40px;
     align-items: center;
     padding-left: 10px;
     padding-right: 11px;
+
+    
+
+    @media(max-width: 720px)
+    {
+      justify-content: flex-end;
+    }
+
+    @media(max-width: 888px)
+    {
+      border-right: 0;
+      border-left: 0;
+      border-radius: 0;
+    }
 
     p{
         font-weight: bold;
@@ -437,10 +491,15 @@ const IndicatorsDiv = styled.div`
     }
     
 
-    input{
+    input,.checkbox2{
         width: 20px;
         height: 20px;
         cursor: pointer;
+        
+    }
+
+    .checkbox2{
+      
     }
 `;
 

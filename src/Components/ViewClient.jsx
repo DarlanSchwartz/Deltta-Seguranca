@@ -83,7 +83,8 @@ const ViewClientDiv = styled.div`
     max-width: 600px;
     color: white;
     max-height: 600px;
-    min-width: 450px;
+    min-width: 300px;
+    width: 100%;
     position: fixed;
     left: 50%;
     top: 50%;

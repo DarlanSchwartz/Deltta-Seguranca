@@ -9,6 +9,7 @@ import {FaReceipt} from 'react-icons/fa';
 import logo from '/new-logo2.png';
 import Swal from "sweetalert2";
 import { saveClientsTextFile } from "../utils";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function Navbar() {
     const [showSearchIcon, setShowSeachIcon] = useState(true);
     const [showDotsDropdown, setShowDotsDropdown] = useState(false);
     const [searchValue, setSearchValue] = useState('');
+    const size = useWindowSize();
 
 
     function updateSearch(word) {
@@ -61,7 +63,7 @@ export default function Navbar() {
                 <Header>
                     <div className="logo-container" onClick={()=>setShowDotsDropdown(false)}>
                         <img className="logo" src={logo} alt="logo" onClick={()=> navigate('/clients')} />
-                        {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>Clientes</h1>}
+                        {location.pathname === '/' ? <h1 className='title'>{editingClient ? 'Editar cliente' : 'Cadastrar cliente'}</h1> : <h1 className='title'>{size.width > 390 ? 'Clientes' : ''}</h1>}
                     </div>
                     {location.pathname !== '/' &&
                         <SearchBar  onClick={()=>setShowDotsDropdown(false)}>
@@ -71,8 +73,8 @@ export default function Navbar() {
                             </div>
                         </SearchBar>}
                     <Actions>
-                        <button onClick={() => { navigate('/clients'); setEditingClient(null);setShowDotsDropdown(false)}}><MdGroups2 className="icon-group" />Clientes</button>
-                        <button onClick={() => {navigate('/'); setShowDotsDropdown(false)}}><BsPersonFillAdd className="icon-add" /> Cadastrar cliente</button>
+                        <button onClick={() => { navigate('/clients'); setEditingClient(null);setShowDotsDropdown(false)}}><MdGroups2 className="icon-group" />{size.width > 715 ? 'Clientes' : ''}</button>
+                        <button onClick={() => {navigate('/'); setShowDotsDropdown(false)}}><BsPersonFillAdd className="icon-add" />{size.width > 920  ? 'Cadastrar cliente' : size.width > 720 ? 'Cadastrar' : ''}</button>
                         <BsThreeDotsVertical onClick={()=>setShowDotsDropdown(!showDotsDropdown)} className="three-dots" />
                         {showDotsDropdown && 
                         <OptionsDropdown onBlur={()=>setShowDotsDropdown(false)}>
@@ -115,9 +117,7 @@ const OptionsDropdown = styled.div`
         padding-right: 10px;
         justify-content: center;
         max-width: 100%;
-        
     }
-
 `;
 
 const Header = styled.nav`
@@ -136,22 +136,46 @@ const Header = styled.nav`
   padding-left: 30px;
   z-index: 2;
 
+  @media (max-width:510px) 
+    {
+        padding-left: 10px;
+    }
+
   .logo-container{
     display: flex;
     height: 100%;
     align-items: center;
     gap: 20px;
+    @media (max-width:510px) 
+    {
+        gap: 10px;
+    }
   }
 
   .logo{
     height: 70%;
     cursor: pointer;
+    @media (max-width:510px) 
+    {
+        height: 50%;
+    }
   }
 
   h1{
     font-size: 40px;
     color: #ddd815;
     flex-shrink: 0;
+    transition: all 200ms;
+
+    @media (max-width:805px) 
+    {
+        font-size: 30px;
+    }
+
+    @media (max-width:510px) 
+    {
+       font-size: 18px;
+    }
   }
 
 `;
@@ -209,6 +233,13 @@ display:  flex;
 gap: 10px;
 max-width: 340px;
 width: 100%;
+justify-content: flex-end;
+
+@media (max-width:510px) 
+{
+    max-width: fit-content;
+    gap: 5px;
+}
 
 .three-dots{
     font-size: 35px;

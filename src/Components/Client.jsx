@@ -8,16 +8,21 @@ import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 import { saveClients } from '../utils';
-
+import { useWindowSize } from "@uidotdev/usehooks";
+import { AiTwotonePhone } from 'react-icons/ai';
+import { ImLocation } from 'react-icons/im';
+import { BsPersonLinesFill } from 'react-icons/bs';
 
 export default function Client(props) {
   const { setEditingClient, usuarios, setUsuarios, setViewingClient, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
 
   const { user, checked } = props;
   const { nome, rua, contato, numero, bairro, cidade, vencimento } = user;
+  const adress = rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade;
   const isChecked = useRef(null);
   const navigate = useNavigate();
   const today = new Date().getDate();
+  const size = useWindowSize();
 
 
   useEffect(() => {
@@ -57,7 +62,7 @@ export default function Client(props) {
       imageUrl: trashIcon,
       imageWidth: 100,
       imageHeight: 100,
-      background:'#1f1f1f'
+      background: '#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
         toast.error(`${user.nome} foi removido da lista`, {
@@ -84,15 +89,32 @@ export default function Client(props) {
 
   return (
     <ClientDiv id='client' client_id={user.id} show={props.show.toString()} onClick={view} expires_today={(today == vencimento).toString()}>
-      <p>{nome}</p>
-      <p>{rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade}</p>
-      <p>{contato != '' ? contato : '( -- ) -------------'}</p>
-      <div className='actions'>
-        <FaEdit onClick={edit} className='edit-icon' />
-        <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon' />
-        <div className='checkbox' onClick={(e) => e.stopPropagation()}>
-          <input className='checkbox-input' ref={isChecked} type="checkbox" onClick={(e) => { e.stopPropagation(); setChecked(e.target.checked) }} />
+      <div className='content'>
+        {
+          size.width > 720 ?
+
+          <>
+            <p className='name'>{nome && nome.substring(0, 30)}{nome && nome.length > 30 && '...'}</p>
+            <p className='address'>{adress && adress.substring(0, 35)}{adress && adress.length > 35 && '...'}</p>
+            <p className='contact'>{contato != '' ? contato : '( -- ) -------------'}</p>
+          </> :
+           <div className='column-info'>
+            <p className='name'><BsPersonLinesFill className='i'/>- {nome && nome.substring(0, 30)}{nome && nome.length > 30 && '...'}</p>
+            <p className='address'><ImLocation className='i'/>- {adress && adress.substring(0, 35)}{adress && adress.length > 35 && '...'}</p>
+            <p className='contact'><AiTwotonePhone className='i'/>- {contato != '' ? contato : '( -- ) -------------'}</p>
+          </div>
+        }
+        {
+          size.width > 510 &&
+          <div className='actions'>
+          <FaEdit onClick={edit} className='edit-icon' />
+          <RiDeleteBin6Fill onClick={deleteThis} className='delete-icon' />
         </div>
+        }
+       
+      </div>
+      <div className='checkbox' onClick={(e) => e.stopPropagation()}>
+        <input className='checkbox-input' ref={isChecked} type="checkbox" onClick={(e) => { e.stopPropagation(); setChecked(e.target.checked) }} />
       </div>
     </ClientDiv>
   );
@@ -100,49 +122,137 @@ export default function Client(props) {
 
 
 const ClientDiv = styled.div`
-  
-    background-color: #202122;
-    border-radius: 5px;
-    color: white;
+    max-width:1174px;
     width: 100%;
-    max-width: 1100px;
     display: ${(props) => props.show == 'true' ? 'flex' : 'none'};
-    gap: 30px;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: content-box;
-    border: 2px solid rgba(0,0,0,0);
-    cursor: pointer;
+    gap: 2px;
+    height: fit-content;
+    overflow: hidden;
+    @media(max-width: 728px)
+    {
+      gap: 0;
+    }
+    &:hover{
+      .content{
+        border: 2px solid #ddd815;
+      }
+    }
+    .content{
+      cursor: pointer;
+      border: 2px solid rgba(0,0,0,0);
+      background-color: #202122;
+      border-radius: 5px;
+      color: white;
+      max-width: calc(1174px - 42px);
+      width: 100%;
+      gap: 20px;
+      height: 40px;
+      align-items: center;
+      justify-content: space-between;
+      display: flex;
+      padding-left: 10px;
+      padding-right: 10px;
+      @media(max-width: 728px)
+      {
+        border-radius: 0;
+      }
+
+      @media(max-width: 888px)
+      {
+        min-height: 80px;
+        max-height: 120px;
+        height: fit-content;
+      }
+
+      .column-info{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        overflow: hidden;
+        .i{
+          padding-top: 5px;
+          padding-right: 5px;
+        }
+        p{
+          max-width: 100%;
+          overflow: hidden;
+          line-clamp: 1;
+          white-space: nowrap;
+        }
+      }
+
+      p{
+        width: 100%;
+      }
+
+      .contact{
+        max-width: 147px;
+      }
+      .address{
+        max-width: 540px;
+      }
+
+      .name{
+        max-width: 320px;
+      }
+    }
+
+    .checkbox{
+          background-color: #202122;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          min-height: 40px;
+          border-radius: 5px;
+         
+          cursor: auto;
+
+          @media(max-width: 720px)
+          {
+            width: auto;
+          }
+
+          @media(max-width: 888px)
+          {
+            height: 100%;
+          }
+          @media(max-width: 720px)
+          {
+            border-radius: 0;
+          }
+          input{
+            cursor: pointer;
+            accent-color: #2686d4;
+            width: 22px;
+            height: 22px;
+
+            @media(max-width: 720px)
+            {
+              margin-right: 5px;
+            }
+        }
+      }
 
     &:last-child
     {
       margin-bottom: 40px;
     }
-    
 
-    &:hover{
-      border: 2px solid #ddd815;
+    p{
+      width: 100%;
     }
-
 
     p:nth-child(1)
     {
-      width: 300px;
+     
       color: ${(props) => props.expires_today == 'true' ? 'red' : 'white'};
       font-weight: ${(props) => props.expires_today == 'true' ? 'bold' : 'normal'};
     }
 
-    p:nth-child(2)
-    {
-      width: 500px;
-    }
-    p:nth-child(3)
-    {
-      width: 127px;
-    }
     
 
     .actions{
@@ -166,27 +276,5 @@ const ClientDiv = styled.div`
       .delete-icon{
         color: red;
       }
-
-      .checkbox{
-          position: absolute;
-          right: -60px;
-          background-color: #202122;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 42px;
-          height: 42px;
-          border-radius: 5px;
-          cursor: auto;
-
-          input{
-            cursor: pointer;
-            accent-color: #2686d4;
-            width: 20px;
-            height: 20px;
-        }
-      }
-
-      
     }
 `;

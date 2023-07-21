@@ -1,21 +1,28 @@
-import { styled } from "styled-components";
-import Client from "../Components/Client";
 import { useContext, useEffect, useRef, useState } from "react";
-import ClientsContext from "../Contexts/ClientsContext";
-import ViewClient from "../Components/ViewClient";
-import { AiTwotonePhone } from 'react-icons/ai';
-import { ImLocation } from 'react-icons/im';
-import { BsPersonLinesFill } from 'react-icons/bs';
-import { RiPrinterFill, RiDeleteBin6Fill, RiListOrdered } from 'react-icons/ri';
+import { useNavigate } from "react-router-dom";
+import { useWindowSize } from "@uidotdev/usehooks";
+
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-import trashIcon from '/trash.png';
-import { useNavigate } from "react-router-dom";
-import { saveClients } from "../utils";
-import { useWindowSize } from "@uidotdev/usehooks";
-import {BiTimeFive,BiMoneyWithdraw} from 'react-icons/bi';
+
+import { styled } from "styled-components";
+import Client from "../Components/Client";
+import LoadingComponent from "../Components/LoadingComponent";
+
+import { OrdenarPor } from "../utils";
+
+import ClientsContext from "../Contexts/ClientsContext";
+import ViewClient from "../Components/ViewClient";
+
+import { AiTwotonePhone } from 'react-icons/ai';
+import { ImLocation } from 'react-icons/im';
 import {GiReceiveMoney} from 'react-icons/gi';
 import { MdGroups2 } from 'react-icons/md';
+import { BsPersonLinesFill } from 'react-icons/bs';
+import {BiTimeFive,BiMoneyWithdraw} from 'react-icons/bi';
+import { RiPrinterFill, RiDeleteBin6Fill, RiListOrdered } from 'react-icons/ri';
+import trashIcon from '/trash.png';
+import { GetAllClients, RemoveManyClients } from "../API/requests";
 
 export default function Clients() {
   const { usuarios, setUsuarios, clientSearchValue, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
@@ -45,7 +52,7 @@ export default function Clients() {
   }, [usuarios]);
 
   useEffect(() => {
-    ordernar('nome');
+    GetAllClients(null,setUsuarios);
   }, []);
 
   useEffect(() => {
@@ -60,97 +67,6 @@ export default function Clients() {
     }
   }, [checkAll]);
 
-  function ordernarPorNome() {
-    if (usuarios !== null && usuarios != undefined) {
-      const users = [...usuarios];
-
-      users.sort((a, b) => {
-        if (a.nome.toLowerCase() < b.nome.toLowerCase()) {
-          return -1;
-        } else if (a.nome.toLowerCase() > b.nome.toLowerCase()) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
-      setUsuarios(users);
-    }
-  }
-
-  function ordernarPorValor() {
-    if (usuarios !== null && usuarios != undefined) {
-      const users = [...usuarios];
-
-      users.sort((a, b) => {
-        if (a.valorCombinado > b.valorCombinado) {
-          return -1;
-        } else if (a.valorCombinado < b.valorCombinado) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
-      setUsuarios(users);
-    }
-  }
-
-  function ordernarPorDia() {
-    if (usuarios !== null && usuarios != undefined) {
-      const users = [...usuarios];
-
-      users.sort((a, b) => {
-        if (Number(a.vencimento) < Number(b.vencimento)) {
-          return -1;
-        } else if (Number(a.vencimento) > Number(b.vencimento)) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
-      setUsuarios(users);
-    }
-  }
-
-  function ordernarPorCidade() {
-    if (usuarios !== null && usuarios != undefined) {
-      const users = [...usuarios];
-
-      users.sort((a, b) => {
-        if (a.cidade.toLowerCase() > b.cidade.toLowerCase()) {
-          return -1;
-        } else if (a.cidade.toLowerCase() < b.cidade.toLowerCase()) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
-      setUsuarios(users);
-    }
-  }
-
-  function ordernar(por) {
-    switch (por) {
-      case 'nome':
-        ordernarPorNome();
-        break;
-      case 'valor':
-        ordernarPorValor();
-        break;
-      case 'cidade':
-        ordernarPorCidade();
-        break;
-      case 'dia':
-        ordernarPorDia();
-        break;
-      default:
-        ordernarPorNome();
-        break;
-    }
-  }
 
   function deleteSelected() {
     Swal.fire({
@@ -168,21 +84,21 @@ export default function Clients() {
       background: '#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
-        toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
-          position: "bottom-left",
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-        });
+        const AfterRemove = (res)=>{
+          toast.error(`${selectedUsers.length} clientes foram removidos da lista!`, {
+            position: "bottom-left",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+          });
+          GetAllClients(null,setUsuarios);
+        }
 
-        const newUsers = usuarios.filter(user => !selectedUsers.includes(user.id));
-        saveClients(newUsers);
-        setUsuarios(newUsers);
-        setCheckAll(false);
+        RemoveManyClients(null,AfterRemove,selectedUsers);
       }
     });
   }
@@ -200,7 +116,7 @@ export default function Clients() {
           <FilterDiv>
             <div className="order-div">
               {size.width > 1055 && <p>Ordenar por </p>}
-              <select ref={orderSelect} onChange={(e) => ordernar(e.target.value)} name="order" id="order">
+              <select ref={orderSelect} onChange={(e) => setUsuarios(OrdenarPor(e.target.value,usuarios))} name="order" id="order">
                 <option value="nome">Nome</option>
                 <option value="valor">Valor Pago</option>
                 <option value="cidade">Cidade</option>
@@ -225,7 +141,7 @@ export default function Clients() {
                 <p>Telefone <AiTwotonePhone className="icon" /></p>
                 <input type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
               </> :
-               <input type="checkbox2" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
+               <input className="checkbox2" type="checkbox" checked={checkAll} onChange={(e) => setCheckAll(e.target.checked)} />
             }
             
            
@@ -248,7 +164,7 @@ export default function Clients() {
             <Client show={hide} user={user} key={user.id} checked={checkAll} />
           );
         })}
-        {usuarios !== null && usuarios !== undefined && usuarios.length == 0 && <h1 className="no-users-text">Não há nenhum cliente cadastrado ainda!</h1>}
+        {usuarios && usuarios.length == 0 ? <h1 className="no-users-text">Não há nenhum cliente cadastrado ainda!</h1> : !usuarios ? <LoadingComponent/> : ''}
       </ClientsContainer>
       <ViewClient />
 

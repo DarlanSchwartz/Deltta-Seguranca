@@ -68,7 +68,7 @@ export default function Navbar() {
                     {location.pathname !== '/' &&
                         <SearchBar  onClick={()=>setShowDotsDropdown(false)}>
                             <div className="input-container" onClick={()=>setShowDotsDropdown(false)}>
-                                <input value={searchValue} onChange={(e) => updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={() => {setShowSeachIcon(false); setShowDotsDropdown(false)}} onBlur={() => setShowSeachIcon(true)} />
+                                <input id="dellta" name="deltta" value={searchValue} onChange={(e) => updateSearch(e.target.value)} type="text" placeholder="Pesquisar.." onFocus={() => {setShowSeachIcon(false); setShowDotsDropdown(false)}} onBlur={() => setShowSeachIcon(true)} />
                                 <MdPersonSearch className={`search-icon ${!showSearchIcon ? 'hide' : ''}`} />
                             </div>
                         </SearchBar>}

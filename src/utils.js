@@ -119,3 +119,91 @@ export function saveClientsTextFile(clients, fileName = "backup-clients.txt") {
     var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
     FileSaver.saveAs(blob, fileName);
 }
+
+
+function ordernarPorNome(usuarios) {
+    if (usuarios) {
+      const users = [...usuarios];
+
+      users.sort((a, b) => {
+        if (a.nome.toLowerCase() < b.nome.toLowerCase()) {
+          return -1;
+        } else if (a.nome.toLowerCase() > b.nome.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      return users;
+    }
+  }
+
+  function ordernarPorValor(usuarios) {
+    if (usuarios) {
+      const users = [...usuarios];
+
+      users.sort((a, b) => {
+        if (a.valorCombinado > b.valorCombinado) {
+          return -1;
+        } else if (a.valorCombinado < b.valorCombinado) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      return users;
+    }
+  }
+
+  function ordernarPorDia(usuarios) {
+    if (usuarios) {
+      const users = [...usuarios];
+
+      users.sort((a, b) => {
+        if (Number(a.vencimento) < Number(b.vencimento)) {
+          return -1;
+        } else if (Number(a.vencimento) > Number(b.vencimento)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      return users;
+    }
+  }
+
+  function ordernarPorCidade(usuarios) {
+    if (usuarios) {
+      const users = [...usuarios];
+
+      users.sort((a, b) => {
+        if (a.cidade.toLowerCase() > b.cidade.toLowerCase()) {
+          return -1;
+        } else if (a.cidade.toLowerCase() < b.cidade.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      return users;
+    }
+  }
+
+  export function OrdenarPor(por,usuarios) {
+    switch (por) {
+      case 'nome':
+        return ordernarPorNome(usuarios);
+      case 'valor':
+        return ordernarPorValor(usuarios);
+      case 'cidade':
+        return ordernarPorCidade(usuarios);
+      case 'dia':
+        return ordernarPorDia(usuarios);
+      default:
+        return ordernarPorNome(usuarios);
+    }
+  }

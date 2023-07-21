@@ -1,12 +1,13 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
-import { formatarTelefone, formatValorCombinado, saveClients } from "../utils";
+import { formatarTelefone, formatValorCombinado } from "../utils";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
+import {EditClient, RegisterClient} from '../API/requests';
 
-export default function RegisterClient() {
+export default function RegisterClientPage() {
     const [nome, setNome] = useState('');
     const [rua, setRua] = useState('');
     const [bairro, setBairro] = useState('');
@@ -20,7 +21,7 @@ export default function RegisterClient() {
     const [editingClientId, setEditingClientId] = useState(null);
     const formadepagamento = useRef(null);
     const [podeCadastrar, setPodeCadastrar] = useState(false);
-    const { usuarios, setUsuarios, editingClient, setEditingClient } = useContext(ClientsContext);
+    const {editingClient, setEditingClient } = useContext(ClientsContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,78 +80,45 @@ export default function RegisterClient() {
     }, [nome, vencimento, valorCombinado]);
 
     function cadastrarCliente() {
-        if (!podeCadastrar) {
-            alert('Pra que bugar o site?')
-            return;
+        if (!podeCadastrar) return alert('Pra que bugar o site?');
+
+        const newObj = {
+            nome: nome,
+            rua: rua,
+            numero: Number(numero),
+            bairro: bairro,
+            cidade: cidade,
+            contato: contato.toString(),
+            contato2: contato2.toString(),
+            formadepagamento: formadepagamento.current.value,
+            valorCombinado: Number(valorCombinado),
+            observacao: observacao,
+            vencimento: Number(vencimento)
+        };
+
+        const AfterRegister = (res) =>{
+            notify('register');
+            clearFields();
         }
 
-        let id = 1;
+        const AfterEdit = (res) =>{
+            notify('edit');
+            clearFields();
+            setEditingClient(null);
+            navigate('/clients');
+        }
 
         if (editingClient == null) {
-            let clientIds = [];
-
-            if (usuarios !== null && usuarios !== undefined && usuarios.length > 0) {
-                usuarios.forEach(user => {
-                    clientIds.push(user.id);
-                });
-
-                do {
-                    id = Math.floor(Math.random() * 999) + 1;
-                    console.log(id);
-                } while (clientIds.includes(id));
-            }
-
-            const newObj = {
-                id: id,
-                nome: nome,
-                rua: rua,
-                numero: numero,
-                bairro: bairro,
-                cidade: cidade,
-                contato: contato.toString(),
-                contato2: contato2.toString(),
-                formadepagamento: formadepagamento.current.value,
-                valorCombinado: Number(valorCombinado),
-                observacao: observacao,
-                vencimento: vencimento
-            };
-
-            notify('register');
-            const newUsers = [...usuarios, newObj];
-            saveClients(newUsers);
-            setUsuarios(newUsers);
-            limparCampos();
+            RegisterClient(null,AfterRegister,newObj);
         }
         else {
-            const newObj = {
-                id: editingClientId,
-                nome: nome,
-                rua: rua,
-                numero: numero,
-                bairro: bairro,
-                cidade: cidade,
-                contato: contato.toString(),
-                contato2: contato2.toString(),
-                formadepagamento: formadepagamento.current.value,
-                valorCombinado: valorCombinado,
-                observacao: observacao,
-                vencimento: vencimento
-            };
-
-            notify('edit');
-            const filteredUsers = usuarios.filter(user => user.id != editingClientId);
-            filteredUsers.push(newObj);
-            saveClients(filteredUsers);
-            setUsuarios([...filteredUsers]);
-            setEditingClient(null);
-            limparCampos();
-            navigate('/clients');
+            EditClient(null,AfterEdit,newObj,editingClientId);
         }
     }
 
 
 
-    function limparCampos() {
+    function clearFields() {
         setNome('');
         setRua('');
         setBairro('');

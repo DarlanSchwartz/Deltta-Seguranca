@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";

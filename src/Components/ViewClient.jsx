@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { styled } from "styled-components";
 import ClientsContext from "../Contexts/ClientsContext";
 import { BsFillPrinterFill } from 'react-icons/bs';
@@ -7,10 +7,11 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import trashIcon from '/trash.png';
-import { saveClients } from "../utils";
+import { toast } from "react-toastify";
+import { GetAllClients, RemoveClient } from "../API/requests";
 
 export default function ViewClient() {
-    const { usuarios, setUsuarios, viewingClient, setViewingClient, setEditingClient } = useContext(ClientsContext);
+    const { setUsuarios, viewingClient, setViewingClient, setEditingClient } = useContext(ClientsContext);
 
     const navigate = useNavigate();
 
@@ -37,12 +38,24 @@ export default function ViewClient() {
             imageHeight: 100,
             background:'#1f1f1f'
         }).then((result) => {
-            if (result.isConfirmed) {
-                const newUsers = usuarios.filter(fuser => fuser.id != viewingClient.id);
-                saveClients(newUsers);
-                setUsuarios(newUsers);
+           
+            const AfterRemove = (res)=>{
+                toast.error(`${viewingClient.nome} foi removido da lista`, {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                setUsuarios(undefined);
                 setViewingClient(null);
+                GetAllClients(null,setUsuarios);
             }
+            
+            RemoveClient(null,AfterRemove,viewingClient.id);
         });
     }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ClientsContext from '../Contexts/ClientsContext';
 import { useNavigate } from 'react-router-dom';
@@ -7,17 +7,17 @@ import trashIcon from '/trash.png';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
-import { saveClients } from '../utils';
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AiTwotonePhone } from 'react-icons/ai';
 import { ImLocation } from 'react-icons/im';
 import { BsPersonLinesFill } from 'react-icons/bs';
+import { GetAllClients, RemoveClient } from '../API/requests';
 
 export default function Client(props) {
   const { setEditingClient, usuarios, setUsuarios, setViewingClient, setSelectedUsers, selectedUsers } = useContext(ClientsContext);
 
   const { user, checked } = props;
-  const { nome, rua, contato, numero, bairro, cidade, vencimento } = user;
+  const { nome, rua, contato, numero, bairro, cidade, vencimento,id } = user;
   const adress = rua + ' ' + numero + ' - ' + bairro + ' - ' + cidade;
   const isChecked = useRef(null);
   const navigate = useNavigate();
@@ -65,19 +65,23 @@ export default function Client(props) {
       background: '#1f1f1f'
     }).then((result) => {
       if (result.isConfirmed) {
-        toast.error(`${user.nome} foi removido da lista`, {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-        });
-        const newUsers = usuarios.filter(fuser => fuser.id != user.id);
-        saveClients(newUsers);
-        setUsuarios(newUsers);
+
+        const AfterRemove = (res)=>{
+          toast.error(`${user.nome} foi removido da lista`, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+          });
+          setUsuarios(undefined);
+          GetAllClients(null,setUsuarios);
+        }
+        
+        RemoveClient(null,AfterRemove,id);
       }
     });
   }

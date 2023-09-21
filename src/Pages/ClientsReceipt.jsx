@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import ClientsContext from "../Contexts/ClientsContext";
 import { styled } from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
+import {BsInstagram} from 'react-icons/bs';
 import logo2 from '/new-logo2.png';
 import { converterValorPorExtenso, obterMesAtualPorExtenso, obterAnoAtual } from "../utils";
 export default function ClientsReceipt() {
@@ -32,7 +33,7 @@ export default function ClientsReceipt() {
                                         <div className="content">
                                             <img src={logo2} alt="" />
                                             <div className="main-info">
-                                                <p>Fone: (51) 99607-8532</p>
+                                                <p>Fone: (51) 99799-4969 <span className="insta"><BsInstagram/>deltta_zeladoria</span></p>
                                                 <p>email: segurancadeltta@gmail.com</p>
                                             </div>
                                         </div>
@@ -162,6 +163,20 @@ const ReceiptContainer = styled.div`
                 &:nth-child(2)
                 {
                     margin-bottom: 10px;
+                }
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .insta{
+                font-size: 15px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                width: 130px;
+                *{
+                    flex-shrink: 0;
                 }
             }
         }
